@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "9320072963",
+    "project_id": "locationtracker-d46ad",
+    "storage_bucket": "locationtracker-d46ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9320072963:android:2e540fc60cfab07cd20b36",
+        "android_client_info": {
+          "package_name": "ru.navodnikov.denis.locationtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9320072963-l9rm7c2et3i00vqubpqvh2feucm3nahp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5rj4Ns_7KP3SvnS1j5mAhRL6wenpeIO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9320072963-l9rm7c2et3i00vqubpqvh2feucm3nahp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

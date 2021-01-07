@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/
+/app/src/main/java/ru/navodnikov/denis/locationtracker/trash/
