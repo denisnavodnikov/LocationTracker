@@ -26,12 +26,14 @@ import com.google.firebase.auth.FirebaseUser;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
 import ru.navodnikov.denis.locationtracker.ui.Constants;
-import ru.navodnikov.denis.locationtracker.ui.MainActivity;
 
 
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding fragmentLoginBinding;
     FirebaseAuth mAuth;
+
+    public LoginFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,20 +45,24 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         fragmentLoginBinding = FragmentLoginBinding.inflate(inflater, container, false);
-        mAuth = FirebaseAuth.getInstance();
+        View view = fragmentLoginBinding.getRoot();
+                mAuth = FirebaseAuth.getInstance();
+        return view;
+    }
 
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         fragmentLoginBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == Constants.POSITION_PHONE) {
+                if (position == Constants.POSITION_EMAIL) {
                     fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_email));
 
 
-                } else if (position == Constants.POSITION_EMAIL) {
+                } else if (position == Constants.POSITION_PHONE) {
                     fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
                 }
 
@@ -68,6 +74,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
+
         fragmentLoginBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,12 +85,11 @@ public class LoginFragment extends Fragment {
         fragmentLoginBinding.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_trackingFragment);
             }
         });
-        return view;
     }
-
 
     @Override
     public void onStart() {
@@ -198,5 +204,11 @@ public class LoginFragment extends Fragment {
 
     private void updateUI(FirebaseUser user) {
 //        TODO: обновление интерфейса
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fragmentLoginBinding = null;
     }
 }

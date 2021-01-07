@@ -46,11 +46,9 @@ dependencies {
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-firestore:22.0.1'
 
     implementation 'androidx.navigation:navigation-fragment:2.3.2'
     implementation 'androidx.navigation:navigation-ui:2.3.2'
-    androidTestImplementation 'androidx.navigation:navigation-testing:2.3.2'
     implementation 'androidx.navigation:navigation-dynamic-features-fragment:2.3.2'
     implementation "androidx.navigation:navigation-compose:1.0.0-alpha04"
 

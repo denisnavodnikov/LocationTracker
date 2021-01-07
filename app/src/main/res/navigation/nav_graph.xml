@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
-        android:name="ru.navodnikov.denis.locationtracker.TrackingFragment"
+        android:name="ru.navodnikov.denis.locationtracker.ui.TrackingFragment"
         android:label="fragment_tracking"
         tools:layout="@layout/fragment_tracking" >
         <action
