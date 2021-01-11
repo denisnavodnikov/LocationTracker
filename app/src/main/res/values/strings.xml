@@ -22,5 +22,8 @@
 
     <string name="text_tracking_stop">Местонахождение не отслеживется</string>
     <string name="text_tracking_start">Местонахождение отслеживется</string>
+    <string name="sine_out">Выйти</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
 
 </resources>

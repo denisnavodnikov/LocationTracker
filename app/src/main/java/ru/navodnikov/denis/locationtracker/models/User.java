@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.data.models;
+package ru.navodnikov.denis.locationtracker.models;
 
 import com.google.android.gms.maps.model.LatLng;
 

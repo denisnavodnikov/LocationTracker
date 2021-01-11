@@ -2,15 +2,19 @@ package ru.navodnikov.denis.locationtracker.bg;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
+
+import ru.navodnikov.denis.locationtracker.models.AppModule;
 
 
-public class SendLocationModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class SendLocationModelFactory {
 
-
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new SendLocationViewModel();
-    }
+    public AppModule appComponent;
+//
+//    public SendLocationModelFactory(AppModule appComponent) {
+//        this.appComponent = appComponent;
+//    }
+//
+//    public SendTrackerContract.ServiceModel create() {
+//        return new SendLocationModel(appComponent.getTrackerRepo(), appComponent.getCache());
+//    }
 }
