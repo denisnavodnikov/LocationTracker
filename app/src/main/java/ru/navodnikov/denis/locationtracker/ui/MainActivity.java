@@ -10,13 +10,10 @@ import ru.navodnikov.denis.locationtracker.R;
 
 public class MainActivity extends AppCompatActivity {
 
-//    public NavController navController;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        navController = Navigation.findNavController(this, R.id.nav_host);
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -78,15 +78,13 @@ public class LoginFragment extends Fragment {
         fragmentLoginBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_trackingFragment);
-
+                login();
             }
         });
         fragmentLoginBinding.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_trackingFragment);
+                register();
             }
         });
     }
@@ -95,9 +93,9 @@ public class LoginFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
+//         Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
 //    private void updateUiWithUser(LoggedInUserView model) {
@@ -139,7 +137,7 @@ public class LoginFragment extends Fragment {
             return;
         }
         mAuth.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -182,7 +180,7 @@ public class LoginFragment extends Fragment {
             return;
         }
         mAuth.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -204,6 +202,11 @@ public class LoginFragment extends Fragment {
 
     private void updateUI(FirebaseUser user) {
 //        TODO: обновление интерфейса
+        if(user== null){
+
+        }else {
+            Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_loginFragment_to_trackingFragment);
+        }
     }
 
     @Override
