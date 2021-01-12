@@ -1,25 +1,12 @@
 package ru.navodnikov.denis.locationtracker.bg;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
-
-import static ru.navodnikov.denis.locationtracker.ui.Constants.NAME_OF_FDB;
-import static ru.navodnikov.denis.locationtracker.ui.Constants.REQUEST_LOCATION;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepo;
 
 public class SendLocationModel implements SendTrackerContract.ServiceModel {
 
@@ -64,4 +51,5 @@ public class SendLocationModel implements SendTrackerContract.ServiceModel {
 //        }
 
     }
+
 }
