@@ -43,6 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
 
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor "androidx.room:room-compiler:$room_version"
     
     // Import the BoM for the Firebase platform

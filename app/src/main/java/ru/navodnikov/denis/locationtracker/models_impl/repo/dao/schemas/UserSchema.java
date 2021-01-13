@@ -9,14 +9,14 @@ public class UserSchema {
     private int id;
     private String name;
     private String email;
-    private String Phone;
+    private String phone;
     private String token;
 
     public UserSchema(int id, String name, String email, String phone, String token) {
         this.id = id;
         this.name = name;
         this.email = email;
-        Phone = phone;
+        this.phone = phone;
         this.token = token;
     }
 
@@ -45,11 +45,11 @@ public class UserSchema {
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
     public void setPhone(String phone) {
-        Phone = phone;
+        phone = phone;
     }
 
     public String getToken() {

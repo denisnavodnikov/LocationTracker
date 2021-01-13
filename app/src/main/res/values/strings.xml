@@ -3,7 +3,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_phone">Телефон</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_password">Пароль</string>
     <string name="button_sign_in">Войти</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
@@ -25,5 +25,9 @@
     <string name="sine_out">Выйти</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_use_for_register">Введите ваши данные</string>
+    <string name="prompt_name">Ваше имя</string>
 
 </resources>

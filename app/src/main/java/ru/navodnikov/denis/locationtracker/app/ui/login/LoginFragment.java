@@ -81,12 +81,7 @@ public class LoginFragment extends Fragment {
                 login();
             }
         });
-        fragmentLoginBinding.register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                register();
-            }
-        });
+
     }
 
     @Override
@@ -159,46 +154,7 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    public void register() {
-        String username = fragmentLoginBinding.emailOrPhone.getText().toString().trim();
-        String password = fragmentLoginBinding.password.getText().toString().trim();
-        if (TextUtils.isEmpty(username)) {
-//            TODO: написать проверку
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-//            TODO: написать проверку
-            return;
-        }
-        if (Constants.ZERO == username) {
-//            TODO: написать проверку
-            return;
-        }
 
-        if (Constants.ZERO == password) {
-//            TODO: написать проверку
-            return;
-        }
-        mAuth.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("log", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-
-                            Log.w("log", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), getActivity().getString(R.string.register_failed),
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-    }
 
     private void updateUI(FirebaseUser user) {
 //        TODO: обновление интерфейса

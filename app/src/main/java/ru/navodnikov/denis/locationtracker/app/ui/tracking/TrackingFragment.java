@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.app.ui;
+package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -109,6 +109,7 @@ public class TrackingFragment extends Fragment {
 
     public void signOut(){
         FirebaseAuth.getInstance().signOut();
-        Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_trackingFragment_to_loginFragment);
+        Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_trackingFragment_to_startFragment);
     }
+
 }
