@@ -1,8 +1,6 @@
-package ru.navodnikov.denis.locationtracker.ui;
+package ru.navodnikov.denis.locationtracker.app.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 

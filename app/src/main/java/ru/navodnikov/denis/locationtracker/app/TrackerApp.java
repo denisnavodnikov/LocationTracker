@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker;
+package ru.navodnikov.denis.locationtracker.app;
 
 import android.app.Application;
 

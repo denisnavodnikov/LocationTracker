@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.models_impl.repo.dao;
+package ru.navodnikov.denis.locationtracker.models.repo;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.LocationSchema;
 
 @Dao
-public interface TrackerDao {
+public abstract class TrackerRoomDao {
     @Query("SELECT * FROM locations ORDER BY time")
-    ArrayList<LocationSchema> getAllLocations();
+    abstract ArrayList<LocationSchema> getAllLocations();
 
     @Insert
-    void insertLocation(LocationSchema locationSchema);
+    abstract void insertLocation(LocationSchema locationSchema);
 }

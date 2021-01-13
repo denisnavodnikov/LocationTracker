@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.ui.login;
+package ru.navodnikov.denis.locationtracker.app.ui.login;
 
 
 import androidx.annotation.NonNull;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
-import ru.navodnikov.denis.locationtracker.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.ui.Constants;
 
 
 public class LoginFragment extends Fragment {

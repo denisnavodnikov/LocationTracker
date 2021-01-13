@@ -1,8 +1,7 @@
-package ru.navodnikov.denis.locationtracker.bg;
+package ru.navodnikov.denis.locationtracker.app.bg;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
@@ -10,14 +9,15 @@ import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepo;
 
 public class SendLocationModel implements SendTrackerContract.ServiceModel {
 
-    private FusedLocationProviderClient fusedLocationClient= LocationServices.getFusedLocationProviderClient(getActivity());
+    private FusedLocationProviderClient fusedLocationClient;
     private final TrackerRepo repo;
     private final Cache cache;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public SendLocationModel(TrackerRepo repo, Cache cache) {
+    public SendLocationModel(TrackerRepo repo, Cache cache, FusedLocationProviderClient client) {
         this.repo = repo;
         this.cache = cache;
+        this.fusedLocationClient = client;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.ui;
+package ru.navodnikov.denis.locationtracker.app.ui;
 
 public class Constants {
     public static final int POSITION_PHONE = 1;

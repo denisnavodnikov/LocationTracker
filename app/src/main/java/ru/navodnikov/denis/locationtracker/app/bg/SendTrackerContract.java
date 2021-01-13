@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.bg;
+package ru.navodnikov.denis.locationtracker.app.bg;
 
 public class SendTrackerContract {
     public interface ServiceModel {

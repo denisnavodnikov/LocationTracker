@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.ui;
+package ru.navodnikov.denis.locationtracker.app.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -24,13 +24,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.concurrent.Executor;
-
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
 
-import static ru.navodnikov.denis.locationtracker.ui.Constants.NAME_OF_FDB;
-import static ru.navodnikov.denis.locationtracker.ui.Constants.REQUEST_LOCATION;
+import static ru.navodnikov.denis.locationtracker.app.ui.Constants.NAME_OF_FDB;
+import static ru.navodnikov.denis.locationtracker.app.ui.Constants.REQUEST_LOCATION;
 
 public class TrackingFragment extends Fragment {
 
