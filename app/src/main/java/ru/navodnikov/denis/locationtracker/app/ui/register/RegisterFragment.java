@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,12 +20,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.Constants;
-import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
+import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, RegisterContract.Router {
 
     private FragmentRegisterBinding fragmentRegisterBinding;
     FirebaseAuth mAuth;
@@ -42,6 +42,12 @@ public class RegisterFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
+
+    @Override
+    protected RegisterContract.ViewModel createModel() {
+        return new ViewModelProvider(this, new RegisterViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(RegisterViewModel.class);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,12 +105,53 @@ public class RegisterFragment extends Fragment {
         if(user== null){
 
         }else {
-            Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_registerFragment_to_trackingFragment);
+//            Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_registerFragment_to_trackingFragment);
         }
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         fragmentRegisterBinding = null;
+    }
+
+    @Override
+    public void proceedToNextScreen() {
+        if (hasHost()) {
+            getFragmentHost().proceedFromRegisterToTrackingScreen();
+        }
+
+    }
+
+    @Override
+    public void launchWorker() {
+        if (hasHost()) {
+//            TODO здесь происходит старт работника, который регистрируется в фоне
+//            final WorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).build();
+//            WorkManager.getInstance(getContext()).enqueue(uploadWorkRequest);
+        }
+    }
+
+    @Override
+    public void showError(Throwable error) {
+//        TODO показ сообщения об ошибке
+        if (hasHost()) {
+//            getFragmentHost().showError(error);
+        }
+    }
+
+    @Override
+//    TODO показать прогресс
+    public void showProgress() {
+//        if (refreshSwipe != null && !refreshSwipe.isRefreshing()) {
+//            refreshSwipe.setRefreshing(true);
+//        }
+    }
+
+    @Override
+    //    TODO спрятать прогресс
+    public void hideProgress() {
+//        if (refreshSwipe != null && refreshSwipe.isRefreshing()) {
+//            refreshSwipe.setRefreshing(false);
+//        }
     }
 }

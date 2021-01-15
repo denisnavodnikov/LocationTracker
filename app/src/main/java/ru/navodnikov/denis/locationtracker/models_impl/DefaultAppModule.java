@@ -8,10 +8,9 @@ import com.google.android.gms.location.LocationServices;
 import ru.navodnikov.denis.locationtracker.models.AppModule;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models_impl.cache.CacheImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepository;
-import ru.navodnikov.denis.locationtracker.models.repo.TrackerRoomDao;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
 
 public class DefaultAppModule implements AppModule {

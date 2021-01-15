@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.app.Activity;
@@ -24,11 +25,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterViewModel;
+import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterViewModelFactory;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
 import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, LoginContract.Router {
     private FragmentLoginBinding fragmentLoginBinding;
     FirebaseAuth mAuth;
 
@@ -39,6 +44,12 @@ public class LoginFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    protected LoginContract.ViewModel createModel() {
+        return new ViewModelProvider(this, new LoginViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(LoginViewModel.class);
+    }
+
 
     @Nullable
     @Override
@@ -161,8 +172,50 @@ public class LoginFragment extends Fragment {
         if(user== null){
 
         }else {
-            Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_loginFragment_to_trackingFragment);
+//            Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_loginFragment_to_trackingFragment);
         }
+    }
+
+
+
+    @Override
+    public void proceedToNextScreen() {
+        if (hasHost()) {
+            getFragmentHost().proceedFromLoginToTrackingScreen();
+        }
+    }
+
+    @Override
+    public void launchWorker() {
+        if (hasHost()) {
+//            TODO здесь происходит старт работника, который логинится в фоне
+//            final WorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).build();
+//            WorkManager.getInstance(getContext()).enqueue(uploadWorkRequest);
+        }
+    }
+
+    @Override
+    public void showError(Throwable error) {
+//        TODO показ сообщения об ошибке
+        if (hasHost()) {
+//            getFragmentHost().showError(error);
+        }
+    }
+
+    @Override
+//    TODO показать прогресс
+    public void showProgress() {
+//        if (refreshSwipe != null && !refreshSwipe.isRefreshing()) {
+//            refreshSwipe.setRefreshing(true);
+//        }
+    }
+
+    @Override
+    //    TODO спрятать прогресс
+    public void hideProgress() {
+//        if (refreshSwipe != null && refreshSwipe.isRefreshing()) {
+//            refreshSwipe.setRefreshing(false);
+//        }
     }
 
     @Override

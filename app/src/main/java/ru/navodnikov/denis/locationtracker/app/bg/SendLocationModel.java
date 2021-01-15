@@ -5,7 +5,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 
 public class SendLocationModel implements SendTrackerContract.ServiceModel {
 
@@ -19,7 +19,7 @@ public class SendLocationModel implements SendTrackerContract.ServiceModel {
         this.cache = cache;
         this.fusedLocationClient = client;
     }
-
+// TODO поменяять логику работы метода
     @Override
     public void sendLocationStart() {
 //        if (ActivityCompat.checkSelfPermission(getActivity(),

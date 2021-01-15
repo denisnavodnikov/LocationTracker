@@ -4,9 +4,7 @@ import android.content.Context;
 
 import androidx.room.Room;
 
-import ru.navodnikov.denis.locationtracker.models.repo.TrackerRoomDao;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerDatabase;
 
 public class TrackerDaoImpl implements TrackerDao {
         private final TrackerRoomDao trackerRoomDao;

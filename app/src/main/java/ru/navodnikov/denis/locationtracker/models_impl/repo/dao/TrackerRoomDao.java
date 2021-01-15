@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.models.repo;
+package ru.navodnikov.denis.locationtracker.models_impl.repo.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

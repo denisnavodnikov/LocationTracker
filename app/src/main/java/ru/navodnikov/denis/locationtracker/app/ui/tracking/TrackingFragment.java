@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 
@@ -25,16 +26,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
+import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.ui.Constants.NAME_OF_FDB;
 import static ru.navodnikov.denis.locationtracker.app.ui.Constants.REQUEST_LOCATION;
 
-public class TrackingFragment extends Fragment {
+public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, TrackingContract.Router {
 
     private FragmentTrackingBinding fragmentTrackingBinding;
     private FusedLocationProviderClient fusedLocationClient;
     FirebaseFirestore db;
+
+    public TrackingFragment() {
+    }
 
     @Nullable
     @Override
@@ -49,8 +55,12 @@ public class TrackingFragment extends Fragment {
 
     }
 
-    public TrackingFragment() {
+    @Override
+    protected TrackingContract.ViewModel createModel() {
+        return new ViewModelProvider(this, new TrackingViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(TrackingViewModel.class);
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class TrackingFragment extends Fragment {
         fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> sendLocationStop());
     }
 
+//    TODO перенести во вьюмодель
     private void sendLocationStart() {
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
@@ -108,8 +119,34 @@ public class TrackingFragment extends Fragment {
     }
 
     public void signOut(){
-        FirebaseAuth.getInstance().signOut();
-        Navigation.findNavController(getActivity(), R.id.nav_host).navigate(R.id.action_trackingFragment_to_startFragment);
+//        TODO перенести proceedToNextScreen()
     }
+
+    @Override
+    public void proceedToNextScreen() {
+        FirebaseAuth.getInstance().signOut();
+        if (hasHost()) {
+            getFragmentHost().proceedToStartScreen();
+        }
+    }
+
+    @Override
+    public void launchWorker() {
+        if (hasHost()) {
+//            TODO здесь происходит старт работника, который отправляет местоположение в фоне
+//            final WorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).build();
+//            WorkManager.getInstance(getContext()).enqueue(uploadWorkRequest);
+        }
+    }
+
+    @Override
+    public void showError(Throwable error) {
+//        TODO показ сообщения об ошибке
+        if (hasHost()) {
+//            getFragmentHost().showError(error);
+        }
+    }
+
+
 
 }
