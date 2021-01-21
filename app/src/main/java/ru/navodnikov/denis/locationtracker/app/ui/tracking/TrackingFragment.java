@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,13 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.ui.Constants.NAME_OF_FDB;
 import static ru.navodnikov.denis.locationtracker.app.ui.Constants.REQUEST_LOCATION;
 
-public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, TrackingContract.Router {
+public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, TrackingContract.Router,  View.OnClickListener {
 
     private FragmentTrackingBinding fragmentTrackingBinding;
     private FusedLocationProviderClient fusedLocationClient;
@@ -66,9 +65,9 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
-        fragmentTrackingBinding.buttonLogOut.setOnClickListener(v -> signOut());
-        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(v -> sendLocationStart());
-        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> sendLocationStop());
+        fragmentTrackingBinding.buttonLogOut.setOnClickListener(this);
+        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(this);
+        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(this);
     }
 
 //    TODO перенести во вьюмодель
@@ -106,11 +105,6 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     private void sendLocationStop() {
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -140,13 +134,29 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     }
 
     @Override
-    public void showError(Throwable error) {
+    public void showError(int error) {
 //        TODO показ сообщения об ошибке
         if (hasHost()) {
 //            getFragmentHost().showError(error);
         }
     }
 
+    @Override
+    public void showMassage(int massage) {
+        fragmentTrackingBinding.textViewInfo.setText(massage);
+    }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId()==R.id.button_log_out){
+            getModel().logOut();
+        }
+        else if(v.getId()==R.id.button_start_tracking){
+            getModel().startTracking();
+        }
+        else if(v.getId()==R.id.button_stop_tracking){
+            getModel().stopTracking();
+        }
+    }
 }

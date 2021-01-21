@@ -13,6 +13,8 @@
     <string name="register_failed">"Регистрация не удалась"</string>
     <string name="button_register">Зарегистрироваться</string>
     <string name="text_or">или</string>
+    <string name="empty_fild_error">Поле не должно быть пустым</string>
+    <string name="empty_password">Пароль не должн быть пустым</string>
     <string name="text_use_for_login">Использовать для входа</string>
 
     <string-array name="spinner_login">

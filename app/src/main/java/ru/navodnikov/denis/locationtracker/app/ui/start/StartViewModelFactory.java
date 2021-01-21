@@ -8,10 +8,8 @@ import ru.navodnikov.denis.locationtracker.models.AppModule;
 
 public class StartViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final StartContract.Router router;
-    private final AppModule appComponent;
 
-    public StartViewModelFactory(AppModule appComponent, StartContract.Router router) {
-        this.appComponent = appComponent;
+    public StartViewModelFactory(StartContract.Router router) {
         this.router = router;
     }
 
@@ -19,7 +17,7 @@ public class StartViewModelFactory extends ViewModelProvider.NewInstanceFactory 
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == StartViewModel.class) {
-            return (T) new StartViewModel(router, appComponent.getCache());
+            return (T) new StartViewModel(router);
         }
         return null;
     }

@@ -14,7 +14,7 @@ public class SendWorker extends Worker {
 
     public SendWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        model = new SendLocationModelFactory(TrackerApp.getInstance().getAppComponent()).create();
+        model = new SendLocationModelFactory().create();
     }
 
     @NonNull

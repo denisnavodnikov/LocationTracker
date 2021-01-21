@@ -1,23 +1,32 @@
 package ru.navodnikov.denis.locationtracker.app.bg;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 
 public class SendLocationModel implements SendTrackerContract.ServiceModel {
 
-    private FusedLocationProviderClient fusedLocationClient;
+    private final CompositeDisposable disposables = new CompositeDisposable();
     private final TrackerRepo repo;
     private final Cache cache;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public SendLocationModel(TrackerRepo repo, Cache cache, FusedLocationProviderClient client) {
+
+    public SendLocationModel(TrackerRepo repo, Cache cache) {
         this.repo = repo;
         this.cache = cache;
-        this.fusedLocationClient = client;
     }
 // TODO поменяять логику работы метода
     @Override
@@ -49,7 +58,7 @@ public class SendLocationModel implements SendTrackerContract.ServiceModel {
 //                        }
 //                    });
 //        }
-
+//
     }
 
 }

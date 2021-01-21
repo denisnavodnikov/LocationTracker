@@ -1,5 +1,6 @@
 package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
+import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
@@ -14,6 +15,22 @@ public class TrackingViewModel extends MviViewModel<TrackingScreenState> impleme
         this.repo = repo;
         this.cache = cache;
     }
+//    TODO добавить методы с логикой работы
 
-    //    TODO добавить методы с логикой работы
+    @Override
+    public void logOut() {
+
+    }
+
+    @Override
+    public void startTracking() {
+
+    }
+
+    @Override
+    public void stopTracking() {
+
+    }
+
+
 }

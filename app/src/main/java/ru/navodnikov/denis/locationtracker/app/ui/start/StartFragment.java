@@ -4,26 +4,21 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.app.ui.tracking.TrackingContract;
-import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
+import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class StartFragment  extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, StartContract.Router{
+public class StartFragment  extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, StartContract.Router, View.OnClickListener{
+
     private FragmentStartBinding fragmentStartBinding;
 
 
@@ -32,14 +27,8 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     protected StartContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new StartViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(StartViewModel.class);
+        return new ViewModelProvider(this, new StartViewModelFactory(this)).get(StartViewModel.class);
     }
 
 
@@ -54,18 +43,8 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentStartBinding.startLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Navigation.findNavController(v).navigate(R.id.action_startFragment_to_loginFragment);
-            }
-        });
-        fragmentStartBinding.startRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Navigation.findNavController(v).navigate(R.id.action_startFragment_to_registerFragment);
-            }
-        });
+        fragmentStartBinding.startLogin.setOnClickListener(this);
+        fragmentStartBinding.startRegister.setOnClickListener(this);
     }
 
     @Override
@@ -76,21 +55,26 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
 
 
     @Override
-    public void proceedToNextScreen() {
-        // TODO написать условие при котором происходит переход на определенный экран
+    public void proceedToNextScreen(int button) {
 
-        if (hasHost()) {
+        if (hasHost()&& button == Constants.BUTTON_LOGIN) {
             getFragmentHost().proceedToLoginScreen();
         }
 
-        // или
-
-//        if (hasHost()) {
-//            getFragmentHost().proceedToRegisterScreen();
-//        }
+        if (hasHost()&& button == Constants.BUTTON_REGISTER) {
+            getFragmentHost().proceedToRegisterScreen();
+        }
 
     }
 
 
-
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.start_login){
+            proceedToNextScreen(Constants.BUTTON_LOGIN);
+        }
+        if (v.getId()==R.id.start_register){
+            proceedToNextScreen(Constants.BUTTON_REGISTER);
+        }
+    }
 }

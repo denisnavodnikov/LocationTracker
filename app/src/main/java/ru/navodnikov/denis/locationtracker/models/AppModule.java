@@ -5,8 +5,10 @@ import android.content.Context;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
+import ru.navodnikov.denis.locationtracker.models.location.Location;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
 public interface AppModule {
     Context getApp();
@@ -17,5 +19,7 @@ public interface AppModule {
 
     Cache getCache();
 
-    FusedLocationProviderClient getLocationClient();
+    Network getTrackerNetwork();
+
+    Location getTrackerLocation();
 }

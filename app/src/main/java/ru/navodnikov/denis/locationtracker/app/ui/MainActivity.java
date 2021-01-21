@@ -33,7 +33,6 @@ public class MainActivity extends HostActivity implements LoginContract.Host, Re
 
     @Override
     protected int getFragmentContainerId() {
-//        TODO хз что это
         return 0;
     }
 
@@ -48,7 +47,7 @@ public class MainActivity extends HostActivity implements LoginContract.Host, Re
     }
 
     @Override
-    public void proceedFromLoginToTrackingScreen() {
+    public void showTrackingScreen() {
         navController.navigate(R.id.action_loginFragment_to_trackingFragment);
     }
 
@@ -60,11 +59,6 @@ public class MainActivity extends HostActivity implements LoginContract.Host, Re
     @Override
     public void proceedToStartScreen() {
         navController.navigate(R.id.action_trackingFragment_to_startFragment);
-    }
-
-    @Override
-    public void showError(Throwable error) {
-
     }
 
 }

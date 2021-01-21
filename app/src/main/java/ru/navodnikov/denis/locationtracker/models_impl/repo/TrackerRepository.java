@@ -7,10 +7,8 @@ import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
 
 public class TrackerRepository implements TrackerRepo {
         private final TrackerDao dao;
-        private final FusedLocationProviderClient client;
 
-    public TrackerRepository(TrackerDao dao, FusedLocationProviderClient client) {
+    public TrackerRepository(TrackerDao dao) {
         this.dao = dao;
-        this.client = client;
     }
 }
