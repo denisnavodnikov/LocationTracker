@@ -85,3 +85,6 @@ lint/tmp/
 # lint/reports/
 /gradle/wrapper/gradle-wrapper.jar
 /.idea/
+
+
+/app/src/main/java/ru/navodnikov/denis/locationtracker/trash/

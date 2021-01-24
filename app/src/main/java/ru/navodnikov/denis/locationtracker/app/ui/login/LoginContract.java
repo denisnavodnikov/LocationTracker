@@ -1,11 +1,15 @@
 package ru.navodnikov.denis.locationtracker.app.ui.login;
 
+import androidx.annotation.StringRes;
+
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
 
 public class LoginContract {
     public interface ViewModel extends FragmentContract.ViewModel<LoginScreenState> {
         void login(String username, String password);
+
+        void checkUserAuthorisation();
     }
     public interface View extends FragmentContract.View {
         void showErrorEmptyPassword(int error);
@@ -13,6 +17,8 @@ public class LoginContract {
         void showProgress();
 
         void hideProgress();
+
+        void showLoginFailed(@StringRes Integer errorString);
 
         void showErrorEmptyUserName(int error);
     }

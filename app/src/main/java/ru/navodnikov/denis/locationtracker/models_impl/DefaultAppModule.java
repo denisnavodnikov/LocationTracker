@@ -48,7 +48,7 @@ public class DefaultAppModule implements AppModule {
 
     @Override
     public Network getTrackerNetwork() {
-        return new TrackerNetwork();
+        return new TrackerNetwork(app);
     }
 
     @Override

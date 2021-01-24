@@ -2,64 +2,60 @@ package ru.navodnikov.denis.locationtracker.app.ui.register;
 
 import android.text.TextUtils;
 
-import ru.navodnikov.denis.locationtracker.app.ui.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
 
 public class RegisterViewModel extends MviViewModel<RegisterScreenState> implements RegisterContract.ViewModel{
     private final RegisterContract.Router router;
     private final Cache cache;
+    private final Network network;
 
-    public RegisterViewModel(RegisterContract.Router router, Cache cache) {
+    public RegisterViewModel(RegisterContract.Router router, Cache cache, Network network) {
         this.router = router;
         this.cache = cache;
+        this.network = network;
     }
 //    TODO добавить методы с логикой работы
 
+    @Override
     public void register(String username, String userEmail, String userPhone, String password) {
         if (TextUtils.isEmpty(username)) {
-            RegisterScreenState.createErrorInputUsernameState(true);
+            postState(RegisterScreenState.createErrorEmptyUsernameState());
         }
         if (TextUtils.isEmpty(userEmail)) {
-            RegisterScreenState.createErrorInputUserEmailState(true);
+            postState(RegisterScreenState.createErrorEmptyUserEmailState());
         }
         if (TextUtils.isEmpty(userPhone)) {
-            RegisterScreenState.createErrorInputUserPhoneState(true);
+            postState(RegisterScreenState.createErrorEmptyUserPhoneState());
         }
         if (TextUtils.isEmpty(password)) {
-            RegisterScreenState.createErrorInputPasswordState(true);
+            postState(RegisterScreenState.createErrorEmptyPasswordState());
         }
         if(TextUtils.isEmpty(username)||TextUtils.isEmpty(userEmail)||TextUtils.isEmpty(userPhone)||TextUtils.isEmpty(password)){
             return;
         }
-        if (Constants.ZERO == username) {
-//            TODO: написать проверку
+        if (!username.contains("@")&&!userEmail.contains(".")) {
+            postState(RegisterScreenState.createErrorUserEmailState());
             return;
         }
 
-        if (Constants.ZERO == password) {
-//            TODO: написать проверку
+        if (password.length()<5) {
+            postState(RegisterScreenState.createErrorPasswordState());
             return;
         }
-//        mAuth.createUserWithEmailAndPassword(userEmail, password)
-//                .addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d("log", "createUserWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//
-//                            Log.w("log", "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(getActivity(), getActivity().getString(R.string.register_failed),
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
+            postState(RegisterScreenState.createRegisterState());
+            network.register(userEmail, password);
+            router.proceedToNextScreen();
+
+//            postState(RegisterScreenState.createErrorRegisterState()); В случае ошибки
+    }
+
+    @Override
+    public void checkUserAuthorisation(){
+        if(network.getmAuth().getCurrentUser()!=null){
+            router.proceedToNextScreen();
+        }
     }
 }

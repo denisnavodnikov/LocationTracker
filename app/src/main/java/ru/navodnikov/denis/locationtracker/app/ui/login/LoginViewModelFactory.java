@@ -20,7 +20,7 @@ public class LoginViewModelFactory extends ViewModelProvider.NewInstanceFactory 
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == LoginViewModel.class) {
-            return (T) new LoginViewModel(router, appComponent.getCache());
+            return (T) new LoginViewModel(router, appComponent.getCache(), appComponent.getTrackerNetwork());
         }
         return null;
     }

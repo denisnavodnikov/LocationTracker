@@ -21,7 +21,7 @@ public class RegisterViewModelFactory extends ViewModelProvider.NewInstanceFacto
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == RegisterViewModel.class) {
-            return (T) new RegisterViewModel(router, appComponent.getCache());
+            return (T) new RegisterViewModel(router, appComponent.getCache(), appComponent.getTrackerNetwork());
         }
         return null;
     }

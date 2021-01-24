@@ -19,7 +19,7 @@ public class TrackingViewModelFactory extends ViewModelProvider.NewInstanceFacto
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == TrackingViewModel.class) {
-            return (T) new TrackingViewModel(router, appComponent.getTrackerRepo(), appComponent.getCache());
+            return (T) new TrackingViewModel(router, appComponent.getTrackerRepo(), appComponent.getCache(), appComponent.getTrackerNetwork());
         }
         return null;
     }

@@ -8,35 +8,47 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
 
     private static final int USERNAME = 1;
     private static final int PASSWORD = 2;
-    private static final int LOADING = 3;
-    private static final int LOGIN = 4;
+    private static final int LOGIN = 3;
+    private static final int ERROR_LOGIN = 4;
 
     private final int action;
     private final int error;
-    private final boolean isProgress;
-    private final boolean empty;
 
-    public LoginScreenState(int action, boolean empty) {
+    public LoginScreenState(int action) {
         this.action = action;
         this.error = -1;
-        this.empty = empty;
-        this.isProgress = false;
     }
 
-    public static LoginScreenState createErrorInputUsernameState(boolean empty) {
-        return new LoginScreenState(USERNAME, empty);
+    public static LoginScreenState createErrorInputUsernameState() {
+        return new LoginScreenState(USERNAME);
     }
-    public static LoginScreenState createErrorInputPasswordState(boolean empty) {
-        return new LoginScreenState(PASSWORD, empty);
+
+    public static LoginScreenState createErrorInputPasswordState() {
+        return new LoginScreenState(PASSWORD);
+    }
+
+    public static LoginScreenState createLoginState() {
+        return new LoginScreenState(LOGIN);
+    }
+
+    public static LoginScreenState createErrorLoginState() {
+        return new LoginScreenState(ERROR_LOGIN);
     }
 
     @Override
     public void visit(LoginContract.View loginScreen) {
-        if(USERNAME==action){
+        if (USERNAME == action) {
             loginScreen.showErrorEmptyUserName(R.string.empty_fild_error);
+        } else if (PASSWORD == action) {
+            loginScreen.showErrorEmptyPassword(R.string.empty_fild_error);
+
         }
-        else if (PASSWORD==action){
-            loginScreen.showErrorEmptyPassword(R.string.empty_password);
+        else if(LOGIN == action){
+            loginScreen.showProgress();
+        }
+        else if(ERROR_LOGIN == action){
+            loginScreen.hideProgress();
+            loginScreen.showLoginFailed(R.string.login_failed);
         }
     }
 }
