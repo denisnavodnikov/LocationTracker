@@ -11,6 +11,7 @@ public class TrackingViewModelFactory extends ViewModelProvider.NewInstanceFacto
     private final TrackingContract.Router router;
 
     public TrackingViewModelFactory(AppModule appComponent, TrackingContract.Router router) {
+        super();
         this.appComponent = appComponent;
         this.router = router;
     }

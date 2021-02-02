@@ -11,8 +11,8 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_trackingFragment"
-            app:destination="@id/trackingFragment"
+            android:id="@+id/action_loginFragment_to_verificationFragment"
+            app:destination="@id/verificationFragment"
             app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
@@ -23,7 +23,7 @@
         <action
             android:id="@+id/action_trackingFragment_to_startFragment"
             app:destination="@id/startFragment"
-            app:enterAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -31,8 +31,8 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_registerFragment_to_trackingFragment"
-            app:destination="@id/trackingFragment"
+            android:id="@+id/action_registerFragment_to_verificationFragment"
+            app:destination="@id/verificationFragment"
             app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
@@ -47,6 +47,20 @@
         <action
             android:id="@+id/action_startFragment_to_loginFragment"
             app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_startFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/verificationFragment"
+        android:name="ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationFragment"
+        android:label="fragment_verification"
+        tools:layout="@layout/fragment_verification" >
+        <action
+            android:id="@+id/action_verificationFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment"
             app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
 </navigation>

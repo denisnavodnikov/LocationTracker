@@ -26,8 +26,6 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, TrackingContract.Router,  View.OnClickListener {
 
     private FragmentTrackingBinding fragmentTrackingBinding;
-    private FusedLocationProviderClient fusedLocationClient;
-    FirebaseFirestore db;
 
     public TrackingFragment() {
     }
@@ -69,10 +67,6 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
         fragmentTrackingBinding = null;
     }
 
-    public void signOut(){
-//        TODO перенести proceedToNextScreen()
-    }
-
     @Override
     public void proceedToNextScreen() {
         FirebaseAuth.getInstance().signOut();
@@ -92,9 +86,9 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
 
     @Override
     public void showError(int error) {
-//        TODO показ сообщения об ошибке
+
         if (hasHost()) {
-//            getFragmentHost().showError(error);
+            getFragmentHost().showError(error);
         }
     }
 

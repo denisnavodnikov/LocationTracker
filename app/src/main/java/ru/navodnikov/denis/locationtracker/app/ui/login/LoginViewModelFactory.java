@@ -12,6 +12,7 @@ public class LoginViewModelFactory extends ViewModelProvider.NewInstanceFactory 
 
 
     public LoginViewModelFactory(AppModule appComponent, LoginContract.Router router) {
+        super();
         this.appComponent = appComponent;
         this.router = router;
     }

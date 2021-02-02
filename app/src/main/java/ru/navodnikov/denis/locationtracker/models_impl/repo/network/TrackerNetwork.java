@@ -11,10 +11,19 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.concurrent.TimeUnit;
 
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
@@ -24,11 +33,57 @@ public class TrackerNetwork implements Network {
     private final FirebaseAuth mAuth;
     private final FirebaseFirestore db;
     private final Context context;
+    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private String mVerificationId;
+    private PhoneAuthProvider.ForceResendingToken mResendToken;
+    private PhoneAuthCredential credential;
+    private String idToken;
+
 
     public TrackerNetwork(Context ctx) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         this.context = ctx;
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+//                        signInWithPhoneAuthCredential(credential);
+                        Log.d("TAG", "onVerificationCompleted:" + credential);
+                    } else {
+                        Log.w("log", "createUserWithPhone:failure", task.getException());
+                    }
+                });
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Log.w("TAG", "onVerificationFailed", e);
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+                    // ...
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                    // ...
+                }
+                // Show a message and update the UI
+                // ...
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                Log.d("TAG", "onCodeSent:" + verificationId);
+                mVerificationId = verificationId;
+                mResendToken = token;
+            }
+        };
+    }
+
+    @Override
+    public String getIdToken() {
+        return idToken;
     }
 
     @Override
@@ -45,8 +100,9 @@ public class TrackerNetwork implements Network {
     public Context getContext() {
         return context;
     }
+
     @Override
-    public void login(String username, String password){
+    public void loginWithEmail(String username, String password) {
         mAuth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -63,17 +119,53 @@ public class TrackerNetwork implements Network {
                     }
                 });
     }
+
     @Override
-    public void register(String userEmail, String password){
-        mAuth.createUserWithEmailAndPassword(userEmail, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+    public void verifyWithPhoneNumber(String userPhone, String password) {
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(userPhone)       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity((Activity) context)                 // Activity (for callback binding)
+                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+
+    }
+
+    @Override
+    public void verificationWithSMS(String smsCode) {
+        credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
+        mAuth.signInWithCredential(credential).addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("TAG", "signInWithCredential:success");
+                    FirebaseUser user = task.getResult().getUser();
+                    getUserToken(user);
+                } else {
+                    // Sign in failed, display a message and update the UI
+                    Log.w("TAG", "signInWithCredential:failure", task.getException());
+                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        // The verification code entered was invalid
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getUserToken(FirebaseUser user) {
+        user.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("log", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            idToken = task.getResult().getToken();
+                            // Send token to your backend via HTTPS
+                            // ...
                         } else {
-                            Log.w("log", "createUserWithEmail:failure", task.getException());
+                            // Handle error -> task.getException();
                         }
                     }
                 });

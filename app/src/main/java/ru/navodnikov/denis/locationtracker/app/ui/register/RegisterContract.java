@@ -8,23 +8,32 @@ import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
 public class RegisterContract {
     public interface ViewModel extends FragmentContract.ViewModel<RegisterScreenState> {
         void register(String username, String userEmail, String userPhone, String password);
-
-        void checkUserAuthorisation();
     }
 
     public interface View extends FragmentContract.View {
+        void showErrorEmptyUserEmail();
+
+        void showErrorEmptyUserPhone();
+
+        void showErrorEmptyUserPassword();
+
+        void showErrorShortPassword();
+
+        void showErrorNotUserEmail();
+
         void showProgress();
 
         void hideProgress();
 
         void showLoginFailed(@StringRes Integer errorString);
 
-        void showError(int error);
+        void showErrorEmptyUserName();
 
     }
 
     public interface Host extends FragmentContract.Host {
-        void proceedFromRegisterToTrackingScreen();
+        void proceedFromRegisterToVerificationScreen();
+        void showError(int error);
     }
 
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
@@ -25,10 +26,16 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
     public StartFragment() {
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getModel().checkUserAuthorisation();
+    }
+
 
     @Override
     protected StartContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new StartViewModelFactory(this)).get(StartViewModel.class);
+        return new ViewModelProvider(this, new StartViewModelFactory(TrackerApp.getInstance().getAppComponent(),this)).get(StartViewModel.class);
     }
 
 
@@ -67,6 +74,10 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
 
     }
 
+    @Override
+    public void proceedToTrackingScreenWithOutLogin(){
+        getFragmentHost().proceedToTrackingScreen();
+    }
 
     @Override
     public void onClick(View v) {

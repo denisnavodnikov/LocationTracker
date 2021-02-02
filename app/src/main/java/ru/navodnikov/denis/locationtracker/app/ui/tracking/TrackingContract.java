@@ -20,6 +20,7 @@ public class TrackingContract {
     public interface Host extends FragmentContract.Host {
 
         void proceedToStartScreen();
+        void showError(int error);
     }
 
 

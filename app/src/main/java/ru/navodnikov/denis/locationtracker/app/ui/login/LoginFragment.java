@@ -4,17 +4,14 @@ package ru.navodnikov.denis.locationtracker.app.ui.login;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseUser;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
@@ -26,7 +23,6 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, LoginContract.Router, View.OnClickListener {
     private FragmentLoginBinding fragmentLoginBinding;
-    private CoordinatorLayout coordinator;
 
     public LoginFragment() {
     }
@@ -51,7 +47,6 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
 
         fragmentLoginBinding = FragmentLoginBinding.inflate(inflater, container, false);
         View view = fragmentLoginBinding.getRoot();
-        coordinator = getActivity().findViewById(R.id.coordinator);
         return view;
     }
 
@@ -63,8 +58,10 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == Constants.POSITION_EMAIL) {
                     fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_email));
+                    fragmentLoginBinding.emailOrPhone.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 } else if (position == Constants.POSITION_PHONE) {
                     fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
+                    fragmentLoginBinding.emailOrPhone.setInputType(InputType.TYPE_CLASS_PHONE);
                 }
             }
 
@@ -75,44 +72,31 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
         fragmentLoginBinding.loginButton.setOnClickListener(this);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getModel().checkUserAuthorisation();
-
-    }
-
 
     @Override
     public void showLoginFailed(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-
-            Snackbar snackbar = Snackbar.make(
-                    coordinator,
-                    errorString,
-                    Snackbar.LENGTH_LONG
-            );
-            snackbar.show();
+        if (hasHost()) {
+            getFragmentHost().showError(errorString);
         }
     }
 
     @Override
     public void proceedToNextScreen() {
         if (hasHost()) {
-            getFragmentHost().showTrackingScreen();
+            getFragmentHost().proceedFromLoginToVerificationScreen();
         }
     }
 
 
     @Override
-    public void showErrorEmptyUserName(int error) {
-        fragmentLoginBinding.emailOrPhone.setError(getContext().getString(error));
+    public void showErrorEmptyUserName() {
+        fragmentLoginBinding.emailOrPhone.setError(getContext().getString(R.string.empty_fild_error));
     }
 
 
     @Override
-    public void showErrorEmptyPassword(int error) {
-        fragmentLoginBinding.password.setError(getContext().getString(error));
+    public void showErrorEmptyPassword() {
+        fragmentLoginBinding.password.setError(getContext().getString(R.string.empty_fild_error));
     }
 
     @Override
@@ -136,7 +120,8 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
         if (v.getId() == R.id.login_button) {
             String username = fragmentLoginBinding.emailOrPhone.getText().toString().trim();
             String password = fragmentLoginBinding.password.getText().toString().trim();
-            getModel().login(username, password);
+            int inputType = fragmentLoginBinding.emailOrPhone.getInputType();
+            getModel().login(username, password, inputType);
         }
     }
 }

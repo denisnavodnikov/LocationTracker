@@ -38,9 +38,9 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
     @Override
     public void visit(LoginContract.View loginScreen) {
         if (USERNAME == action) {
-            loginScreen.showErrorEmptyUserName(R.string.empty_fild_error);
+            loginScreen.showErrorEmptyUserName();
         } else if (PASSWORD == action) {
-            loginScreen.showErrorEmptyPassword(R.string.empty_fild_error);
+            loginScreen.showErrorEmptyPassword();
 
         }
         else if(LOGIN == action){

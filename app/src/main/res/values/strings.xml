@@ -11,6 +11,7 @@
     <string name="invalid_password">Пароль должен быть длиннее 5-ти символов</string>
     <string name="login_failed">"Авторизация не удалась"</string>
     <string name="register_failed">"Регистрация не удалась"</string>
+    <string name="verification_failed">"Верификация не удалась"</string>
     <string name="button_register">Зарегистрироваться</string>
     <string name="text_or">или</string>
     <string name="empty_fild_error">Поле не должно быть пустым</string>
@@ -29,5 +30,9 @@
     <string name="text_use_for_register">Введите ваши данные</string>
     <string name="prompt_name">Ваше имя</string>
     <string name="action_sign_in">Sign in or register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sms_cod">Введите SMS код</string>
+    <string name="button_verification">Подтвердить</string>
 
 </resources>

@@ -1,7 +1,12 @@
 package ru.navodnikov.denis.locationtracker.app.ui.register;
 
 import android.text.TextUtils;
+import android.util.Pair;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
@@ -36,7 +41,7 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         if(TextUtils.isEmpty(username)||TextUtils.isEmpty(userEmail)||TextUtils.isEmpty(userPhone)||TextUtils.isEmpty(password)){
             return;
         }
-        if (!username.contains("@")&&!userEmail.contains(".")) {
+        if (!userEmail.contains("@")&&!userEmail.contains(".")) {
             postState(RegisterScreenState.createErrorUserEmailState());
             return;
         }
@@ -45,17 +50,20 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
             postState(RegisterScreenState.createErrorPasswordState());
             return;
         }
-            postState(RegisterScreenState.createRegisterState());
-            network.register(userEmail, password);
-            router.proceedToNextScreen();
 
-//            postState(RegisterScreenState.createErrorRegisterState()); В случае ошибки
+        Pair<String, String> loginUser = new Pair<>(userPhone, password);
+
+        Single<Pair<String, String>> single = Single.just(loginUser);
+        Disposable disposable = single
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(item -> {
+                    postState(RegisterScreenState.createRegisterState());
+                })
+                .doOnSuccess(pair -> router.proceedToNextScreen())
+                .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
+                .subscribe(pair -> network.verifyWithPhoneNumber(pair.first, pair.second));
     }
 
-    @Override
-    public void checkUserAuthorisation(){
-        if(network.getmAuth().getCurrentUser()!=null){
-            router.proceedToNextScreen();
-        }
-    }
+
 }

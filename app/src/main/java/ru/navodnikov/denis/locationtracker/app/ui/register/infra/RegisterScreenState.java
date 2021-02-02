@@ -54,22 +54,22 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
     @Override
     public void visit(RegisterContract.View registerScreen) {
         if(EMPTY_USERNAME ==action){
-            registerScreen.showError(action);
+            registerScreen.showErrorEmptyUserName();
         }
         else if (EMPTY_USER_EMAIL ==action){
-            registerScreen.showError(action);
+            registerScreen.showErrorEmptyUserEmail();
         }
         else if (EMPTY_USER_PHONE ==action){
-            registerScreen.showError(action);
+            registerScreen.showErrorEmptyUserPhone();
         }
         else if (EMPTY_PASSWORD ==action){
-            registerScreen.showError(action);
+            registerScreen.showErrorEmptyUserPassword();
         }
         else if (SHORT_PASSWORD == action){
-            registerScreen.showError(action);
+            registerScreen.showErrorShortPassword();
         }
         else if (NOT_USER_EMAIL == action){
-            registerScreen.showError(action);
+            registerScreen.showErrorNotUserEmail();
         }
         else if (REGISTER == action){
             registerScreen.showProgress();

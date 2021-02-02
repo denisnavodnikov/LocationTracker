@@ -7,12 +7,11 @@ import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
 
 public class LoginContract {
     public interface ViewModel extends FragmentContract.ViewModel<LoginScreenState> {
-        void login(String username, String password);
+        void login(String username, String password, int inputType);
 
-        void checkUserAuthorisation();
     }
     public interface View extends FragmentContract.View {
-        void showErrorEmptyPassword(int error);
+        void showErrorEmptyPassword();
 
         void showProgress();
 
@@ -20,11 +19,12 @@ public class LoginContract {
 
         void showLoginFailed(@StringRes Integer errorString);
 
-        void showErrorEmptyUserName(int error);
+        void showErrorEmptyUserName();
     }
     public interface Host extends FragmentContract.Host {
 
-        void showTrackingScreen();
+        void proceedFromLoginToVerificationScreen();
+        void showError(int error);
 
     }
 
