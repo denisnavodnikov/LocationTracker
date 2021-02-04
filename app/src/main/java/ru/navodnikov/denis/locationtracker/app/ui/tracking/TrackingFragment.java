@@ -36,7 +36,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         fragmentTrackingBinding = FragmentTrackingBinding.inflate(inflater, container, false);
         View view = fragmentTrackingBinding.getRoot();
         return view;
@@ -53,7 +53,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        db = FirebaseFirestore.getInstance();
+//        db = FirebaseFirestore.getInstance();
         fragmentTrackingBinding.buttonLogOut.setOnClickListener(this);
         fragmentTrackingBinding.buttonStartTracking.setOnClickListener(this);
         fragmentTrackingBinding.buttonStopTracking.setOnClickListener(this);

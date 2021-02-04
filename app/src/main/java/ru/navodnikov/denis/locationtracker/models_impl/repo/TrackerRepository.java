@@ -11,4 +11,9 @@ public class TrackerRepository implements TrackerRepo {
     public TrackerRepository(TrackerDao dao) {
         this.dao = dao;
     }
+
+    @Override
+    public TrackerDao getDao() {
+        return dao;
+    }
 }

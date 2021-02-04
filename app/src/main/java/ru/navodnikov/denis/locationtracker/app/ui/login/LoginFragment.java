@@ -53,15 +53,17 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentLoginBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        fragmentLoginBinding.spinnerLogin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == Constants.POSITION_EMAIL) {
-                    fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_email));
-                    fragmentLoginBinding.emailOrPhone.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                } else if (position == Constants.POSITION_PHONE) {
-                    fragmentLoginBinding.emailOrPhone.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
-                    fragmentLoginBinding.emailOrPhone.setInputType(InputType.TYPE_CLASS_PHONE);
+                if (position == Constants.LOGIN_EMAIL) {
+                    fragmentLoginBinding.emailOrPhoneForLogin.setHint(view.getContext().getResources().getString(R.string.prompt_email));
+                    fragmentLoginBinding.emailOrPhoneForLogin.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    fragmentLoginBinding.passwordForLogin.setVisibility(View.VISIBLE);
+                } else if (position == Constants.LOGIN_PHONE) {
+                    fragmentLoginBinding.emailOrPhoneForLogin.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
+                    fragmentLoginBinding.emailOrPhoneForLogin.setInputType(InputType.TYPE_CLASS_PHONE);
+                    fragmentLoginBinding.passwordForLogin.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -81,22 +83,29 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
     }
 
     @Override
-    public void proceedToNextScreen() {
+    public void proceedToVerificationScreen() {
         if (hasHost()) {
             getFragmentHost().proceedFromLoginToVerificationScreen();
+        }
+    }
+
+    @Override
+    public void proceedToTrackingScreen() {
+        if (hasHost()) {
+            getFragmentHost().proceedFromLoginToTrackingScreen();
         }
     }
 
 
     @Override
     public void showErrorEmptyUserName() {
-        fragmentLoginBinding.emailOrPhone.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentLoginBinding.emailOrPhoneForLogin.setError(getContext().getString(R.string.empty_fild_error));
     }
 
 
     @Override
     public void showErrorEmptyPassword() {
-        fragmentLoginBinding.password.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentLoginBinding.passwordForLogin.setError(getContext().getString(R.string.empty_fild_error));
     }
 
     @Override
@@ -117,11 +126,13 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login_button) {
-            String username = fragmentLoginBinding.emailOrPhone.getText().toString().trim();
-            String password = fragmentLoginBinding.password.getText().toString().trim();
-            int inputType = fragmentLoginBinding.emailOrPhone.getInputType();
-            getModel().login(username, password, inputType);
+        if (v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_EMAIL) {
+            String emailOrPhone = fragmentLoginBinding.emailOrPhoneForLogin.getText().toString().trim();
+            String password = fragmentLoginBinding.passwordForLogin.getText().toString().trim();
+            getModel().loginWithEmail(emailOrPhone, password);
+        } else if(v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE){
+            String emailOrPhone = fragmentLoginBinding.emailOrPhoneForLogin.getText().toString().trim();
+            getModel().loginWithPhone(emailOrPhone);
         }
     }
 }

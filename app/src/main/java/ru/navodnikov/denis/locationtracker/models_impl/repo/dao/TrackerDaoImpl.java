@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Room;
 
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
 
 public class TrackerDaoImpl implements TrackerDao {
         private final TrackerRoomDao trackerRoomDao;
@@ -13,4 +14,10 @@ public class TrackerDaoImpl implements TrackerDao {
     public TrackerDaoImpl(Context ctx) {
         trackerRoomDao = Room.databaseBuilder(ctx, TrackerDatabase.class, DB_NAME).build().trackerDao();
     }
+
+    @Override
+    public void saveUser(User user){
+        trackerRoomDao.insertUser(user);
+    }
+
 }

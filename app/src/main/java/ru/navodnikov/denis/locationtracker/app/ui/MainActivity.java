@@ -63,6 +63,11 @@ public class MainActivity extends HostActivity implements LoginContract.Host, Re
     }
 
     @Override
+    public void proceedFromLoginToTrackingScreen() {
+        navController.navigate(R.id.action_loginFragment_to_trackingFragment);
+    }
+
+    @Override
     public void proceedFromRegisterToVerificationScreen() {
         navController.navigate(R.id.action_registerFragment_to_verificationFragment);
     }

@@ -7,8 +7,9 @@ import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
 
 public class LoginContract {
     public interface ViewModel extends FragmentContract.ViewModel<LoginScreenState> {
-        void login(String username, String password, int inputType);
+        void loginWithEmail(String username, String password);
 
+        void loginWithPhone(String emailOrPhone);
     }
     public interface View extends FragmentContract.View {
         void showErrorEmptyPassword();
@@ -24,11 +25,14 @@ public class LoginContract {
     public interface Host extends FragmentContract.Host {
 
         void proceedFromLoginToVerificationScreen();
+        void proceedFromLoginToTrackingScreen();
         void showError(int error);
 
     }
 
     public interface Router {
-        void proceedToNextScreen();
+        void proceedToVerificationScreen();
+
+        void proceedToTrackingScreen();
     }
 }

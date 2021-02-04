@@ -18,11 +18,13 @@ public interface Network {
 
     void loginWithEmail(String username, String password);
 
-    void verifyWithPhoneNumber(String userEmail, String password);
+    void verifyWithPhoneNumber(String userEmail);
 
     void verificationWithSMS(String smsCode);
 
     void getUserToken(FirebaseUser user);
 
     void startTracking();
+
+    void registerWithEmailNumber(String email, String password);
 }

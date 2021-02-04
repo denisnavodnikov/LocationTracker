@@ -6,7 +6,6 @@ import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
 
 public class RegisterScreenState extends ScreenState<RegisterContract.View> {
 
-    public static final int EMPTY_USERNAME = 1;
     public static final int EMPTY_USER_EMAIL = 2;
     public static final int EMPTY_USER_PHONE = 3;
     public static final int EMPTY_PASSWORD = 4;
@@ -22,9 +21,7 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
     }
 
 
-    public static RegisterScreenState createErrorEmptyUsernameState() {
-        return new RegisterScreenState(EMPTY_USERNAME);
-    }
+
     public static RegisterScreenState createErrorEmptyUserEmailState() {
         return new RegisterScreenState(EMPTY_USER_EMAIL);
     }
@@ -53,10 +50,8 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
 
     @Override
     public void visit(RegisterContract.View registerScreen) {
-        if(EMPTY_USERNAME ==action){
-            registerScreen.showErrorEmptyUserName();
-        }
-        else if (EMPTY_USER_EMAIL ==action){
+
+        if (EMPTY_USER_EMAIL ==action){
             registerScreen.showErrorEmptyUserEmail();
         }
         else if (EMPTY_USER_PHONE ==action){

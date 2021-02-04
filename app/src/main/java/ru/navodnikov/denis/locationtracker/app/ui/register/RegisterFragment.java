@@ -7,12 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.app.ui.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
@@ -46,6 +49,24 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fragmentRegisterBinding.spinnerRegister.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == Constants.LOGIN_EMAIL) {
+                    fragmentRegisterBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_email));
+                    fragmentRegisterBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    fragmentRegisterBinding.passwordForRegister.setVisibility(View.VISIBLE);
+                } else if (position == Constants.LOGIN_PHONE) {
+                    fragmentRegisterBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
+                    fragmentRegisterBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_CLASS_PHONE);
+                    fragmentRegisterBinding.passwordForRegister.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         fragmentRegisterBinding.registerButton.setOnClickListener(this);
     }
 
@@ -71,20 +92,17 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
         }
     }
 
-    @Override
-    public void showErrorEmptyUserName() {
-        fragmentRegisterBinding.nameForRegister.setError(getContext().getString(R.string.empty_fild_error));
-    }
 
     @Override
     public void showErrorEmptyUserEmail() {
-        fragmentRegisterBinding.emailForRegister.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
     }
 
     @Override
     public void showErrorEmptyUserPhone() {
-        fragmentRegisterBinding.phoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
     }
+
 
     @Override
     public void showErrorEmptyUserPassword() {
@@ -113,12 +131,13 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.register_button) {
-            String username = fragmentRegisterBinding.nameForRegister.getText().toString().trim();
-            String userEmail = fragmentRegisterBinding.emailForRegister.getText().toString().trim();
-            String userPhone = fragmentRegisterBinding.phoneForRegister.getText().toString().trim();
+        if (v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_EMAIL) {
+            String email = fragmentRegisterBinding.emailOrPhoneForRegister.getText().toString().trim();
             String password = fragmentRegisterBinding.passwordForRegister.getText().toString().trim();
-            getModel().register(username, userEmail, userPhone, password);
+            getModel().registerWithEmail(email, password);
+        } else if(v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE){
+            String phone = fragmentRegisterBinding.emailOrPhoneForRegister.getText().toString().trim();
+            getModel().registerWithPhone(phone);
         }
     }
 }

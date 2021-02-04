@@ -7,16 +7,18 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.LocationSchema;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserSchema;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.Locations;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
 
 @Dao
 public abstract class TrackerRoomDao {
     @Query("SELECT * FROM locations ORDER BY time")
-    abstract List<LocationSchema> getAllLocations();
+    abstract List<Locations> getAllLocations();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertLocation(LocationSchema locationSchema);
+    abstract void insertLocation(Locations locations);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertUser(UserSchema userSchema);
+    abstract void insertUser(User user);
+    @Query("SELECT*FROM users")
+    abstract User getUser();
 }

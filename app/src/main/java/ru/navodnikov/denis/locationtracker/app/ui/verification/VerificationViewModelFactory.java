@@ -20,7 +20,7 @@ public class VerificationViewModelFactory extends ViewModelProvider.NewInstanceF
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == VerificationViewModel.class) {
-            return (T) new VerificationViewModel(router, appComponent.getTrackerNetwork());
+            return (T) new VerificationViewModel(router, appComponent.getTrackerRepo(), appComponent.getCache(), appComponent.getTrackerNetwork());
         }
         return null;
     }

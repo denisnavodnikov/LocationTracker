@@ -14,6 +14,10 @@
             android:id="@+id/action_loginFragment_to_verificationFragment"
             app:destination="@id/verificationFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_loginFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"

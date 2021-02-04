@@ -1,6 +1,5 @@
 package ru.navodnikov.denis.locationtracker.app.ui.login;
 
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -24,12 +23,10 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
         this.network = network;
     }
 
-    //    TODO добавить методы с логикой работы
-
     @Override
-    public void login(String username, String password, int inputType) {
+    public void loginWithEmail(String userEmail, String password) {
 
-        if (TextUtils.isEmpty(username)) {
+        if (TextUtils.isEmpty(userEmail)) {
             postState(LoginScreenState.createErrorInputUsernameState());
         }
 
@@ -38,37 +35,49 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
         }
 
 
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
             return;
         }
-        if(inputType== InputType.TYPE_CLASS_PHONE){
-            Pair<String, String> loginUser = new Pair<>(username, password);
 
-            Single<Pair<String, String>> single = Single.just(loginUser);
-            Disposable disposable = single
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(item -> {
-                        postState(LoginScreenState.createLoginState());
-                    })
-                    .doOnSuccess(pair -> router.proceedToNextScreen())
-                    .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
-                    .subscribe(pair -> network.verifyWithPhoneNumber(pair.first, pair.second));
-        }else {
-            Pair<String, String> loginUser = new Pair<>(username, password);
+        Pair<String, String> loginUser = new Pair<>(userEmail, password);
 
-            Single<Pair<String, String>> single = Single.just(loginUser);
-            Disposable disposable = single
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(item -> {
-                        postState(LoginScreenState.createLoginState());
-                    })
-                    .doOnSuccess(pair -> router.proceedToNextScreen())
-                    .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
-                    .subscribe(pair -> network.loginWithEmail(username,password));
-        }
+        Single<Pair<String, String>> single = Single.just(loginUser);
+        Disposable disposable = single
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(item -> {
+                    postState(LoginScreenState.createLoginState());
+                })
+                .doOnSuccess(pair -> {
+                    router.proceedToVerificationScreen();
+                })
+                .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
+                .subscribe(pair -> network.loginWithEmail(userEmail, password));
 
     }
+
+    @Override
+    public void loginWithPhone(String userPhone) {
+        if (TextUtils.isEmpty(userPhone)) {
+            postState(LoginScreenState.createErrorInputUsernameState());
+            return;
+        }
+
+        Single<String> single = Single.just(userPhone);
+        Disposable disposable = single
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(item -> {
+                    postState(LoginScreenState.createLoginState());
+                })
+                .doOnSuccess(s -> {
+                    router.proceedToVerificationScreen();
+                })
+                .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
+                .subscribe(s -> network.verifyWithPhoneNumber(s));
+    }
+
+
+
 
 }

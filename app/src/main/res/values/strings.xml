@@ -27,7 +27,7 @@
     <string name="sine_out">Выйти</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
-    <string name="text_use_for_register">Введите ваши данные</string>
+    <string name="text_use_for_register">Выберите способ регистрации</string>
     <string name="prompt_name">Ваше имя</string>
     <string name="action_sign_in">Sign in or register</string>
     <!-- TODO: Remove or change this placeholder text -->

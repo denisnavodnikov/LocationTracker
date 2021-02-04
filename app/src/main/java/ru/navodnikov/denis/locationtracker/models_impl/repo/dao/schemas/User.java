@@ -4,17 +4,15 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
-public class UserSchema {
+public class User {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String name;
     private String email;
     private String phone;
     private String token;
 
-    public UserSchema(int id, String name, String email, String phone, String token) {
+    public User(int id, String email, String phone, String token) {
         this.id = id;
-        this.name = name;
         this.email = email;
         this.phone = phone;
         this.token = token;
@@ -26,14 +24,6 @@ public class UserSchema {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {

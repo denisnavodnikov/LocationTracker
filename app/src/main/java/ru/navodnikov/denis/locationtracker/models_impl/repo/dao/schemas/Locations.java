@@ -7,16 +7,16 @@ import androidx.room.PrimaryKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "locations")
-public class LocationSchema {
+public class Locations {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @ForeignKey(entity = UserSchema.class, parentColumns = "id", childColumns = "userId", onDelete = CASCADE)
+    @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId", onDelete = CASCADE)
     private int userId;
     private double latitude;
     private double longitude;
     private long time;
 
-    public LocationSchema(int id, int userId, double latitude, double longitude, long time) {
+    public Locations(int id, int userId, double latitude, double longitude, long time) {
         this.id = id;
         this.userId = userId;
         this.latitude = latitude;
