@@ -17,8 +17,10 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
-import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+
+import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
 public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, LoginContract.Router, View.OnClickListener {
@@ -126,13 +128,11 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_EMAIL) {
-            String emailOrPhone = fragmentLoginBinding.emailOrPhoneForLogin.getText().toString().trim();
-            String password = fragmentLoginBinding.passwordForLogin.getText().toString().trim();
-            getModel().loginWithEmail(emailOrPhone, password);
-        } else if(v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE){
-            String emailOrPhone = fragmentLoginBinding.emailOrPhoneForLogin.getText().toString().trim();
-            getModel().loginWithPhone(emailOrPhone);
+        if (v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+            getModel().loginWithPhone(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin));
+        } else {
+            getModel().loginWithEmail(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin),
+                    getTextFromView(fragmentLoginBinding.passwordForLogin));
         }
     }
 }

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
-import static ru.navodnikov.denis.locationtracker.app.ui.Constants.REQUEST_LOCATION;
+import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
 
 public class TrackerNetwork implements Network {
     private final FirebaseAuth mAuth;

@@ -34,7 +34,6 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
             postState(LoginScreenState.createErrorInputPasswordState());
         }
 
-
         if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
             return;
         }
@@ -49,7 +48,7 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
                     postState(LoginScreenState.createLoginState());
                 })
                 .doOnSuccess(pair -> {
-                    router.proceedToVerificationScreen();
+                    router.proceedToTrackingScreen();
                 })
                 .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
                 .subscribe(pair -> network.loginWithEmail(userEmail, password));

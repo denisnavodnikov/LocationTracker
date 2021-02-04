@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 
@@ -28,12 +29,16 @@ public class MainActivity extends HostActivity implements LoginContract.Host, Re
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinator = findViewById(R.id.coordinator);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host);
+        navController = navHostFragment.getNavController();
+//        navController = Navigation.findNavController(this, R.id.nav_host);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        navController = Navigation.findNavController(this, R.id.nav_host);
+
     }
 
 

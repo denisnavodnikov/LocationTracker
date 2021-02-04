@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
@@ -38,7 +38,7 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
             return;
         }
-        if (!userEmail.contains("@") && !userEmail.contains(".")) {
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             postState(RegisterScreenState.createErrorUserEmailState());
             return;
         }

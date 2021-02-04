@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.app.ui;
+package ru.navodnikov.denis.locationtracker.app.utils;
 
 public class Constants {
     public static final int LOGIN_EMAIL = 0;

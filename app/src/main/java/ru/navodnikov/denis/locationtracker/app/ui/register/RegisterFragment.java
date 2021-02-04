@@ -15,10 +15,12 @@ import android.widget.AdapterView;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+
+import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
 public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, RegisterContract.Router, View.OnClickListener {
@@ -131,13 +133,11 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_EMAIL) {
-            String email = fragmentRegisterBinding.emailOrPhoneForRegister.getText().toString().trim();
-            String password = fragmentRegisterBinding.passwordForRegister.getText().toString().trim();
-            getModel().registerWithEmail(email, password);
-        } else if(v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE){
-            String phone = fragmentRegisterBinding.emailOrPhoneForRegister.getText().toString().trim();
-            getModel().registerWithPhone(phone);
+        if (v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+            getModel().registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
+        } else {
+            getModel().registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
+                    getTextFromView(fragmentRegisterBinding.passwordForRegister));
         }
     }
 }

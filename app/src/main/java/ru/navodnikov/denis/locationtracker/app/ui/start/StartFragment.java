@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.app.ui.Constants;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class StartFragment  extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, StartContract.Router, View.OnClickListener{
+public class StartFragment extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, StartContract.Router, View.OnClickListener {
 
     private FragmentStartBinding fragmentStartBinding;
 
@@ -35,7 +35,7 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
 
     @Override
     protected StartContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new StartViewModelFactory(TrackerApp.getInstance().getAppComponent(),this)).get(StartViewModel.class);
+        return new ViewModelProvider(this, new StartViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(StartViewModel.class);
     }
 
 
@@ -64,27 +64,28 @@ public class StartFragment  extends HostedFragment<StartScreenState, StartContra
     @Override
     public void proceedToNextScreen(int button) {
 
-        if (hasHost()&& button == Constants.BUTTON_LOGIN) {
-            getFragmentHost().proceedToLoginScreen();
-        }
-
-        if (hasHost()&& button == Constants.BUTTON_REGISTER) {
-            getFragmentHost().proceedToRegisterScreen();
+        if (hasHost()) {
+            if (button == Constants.BUTTON_LOGIN) {
+                getFragmentHost().proceedToLoginScreen();
+            }
+            if (button == Constants.BUTTON_REGISTER) {
+                getFragmentHost().proceedToRegisterScreen();
+            }
         }
 
     }
 
     @Override
-    public void proceedToTrackingScreenWithOutLogin(){
+    public void proceedToTrackingScreenWithOutLogin() {
         getFragmentHost().proceedToTrackingScreen();
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.start_login){
+        if (v.getId() == R.id.start_login) {
             proceedToNextScreen(Constants.BUTTON_LOGIN);
         }
-        if (v.getId()==R.id.start_register){
+        if (v.getId() == R.id.start_register) {
             proceedToNextScreen(Constants.BUTTON_REGISTER);
         }
     }
