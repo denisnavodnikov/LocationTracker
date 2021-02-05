@@ -10,16 +10,20 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.cache.Cache;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
 
 public class RegisterViewModel extends MviViewModel<RegisterScreenState> implements RegisterContract.ViewModel {
     private final RegisterContract.Router router;
+    private final TrackerRepo repo;
     private final Cache cache;
     private final Network network;
 
-    public RegisterViewModel(RegisterContract.Router router, Cache cache, Network network) {
+    public RegisterViewModel(RegisterContract.Router router, TrackerRepo repo, Cache cache, Network network) {
         this.router = router;
+        this.repo = repo;
         this.cache = cache;
         this.network = network;
     }
@@ -29,7 +33,7 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
     public void registerWithEmail(String userEmail, String password) {
 
         if (TextUtils.isEmpty(userEmail)) {
-            postState(RegisterScreenState.createErrorEmptyUserEmailState());
+            postState(RegisterScreenState.createErrorEmptyUserEmailOrPhoneState());
         }
 
         if (TextUtils.isEmpty(password)) {
@@ -38,7 +42,7 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
             return;
         }
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             postState(RegisterScreenState.createErrorUserEmailState());
             return;
         }
@@ -61,16 +65,18 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
                     cache.setUserEmail(userEmail);
                     cache.setPassword(password);
                     cache.setAction(Constants.REGISTRATION);
-                    router.proceedToNextScreen();
+                    repo.getDao().saveUser(new User(0, userEmail, network.getIdToken()));
+                    router.proceedFromRegisterToTrackingScreen();
                 })
                 .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
                 .subscribe(pair -> network.registerWithEmailNumber(pair.first, pair.second));
     }
 
+
     @Override
     public void registerWithPhone(String userPhone) {
         if (TextUtils.isEmpty(userPhone)) {
-            postState(RegisterScreenState.createErrorEmptyUserPhoneState());
+            postState(RegisterScreenState.createErrorEmptyUserEmailOrPhoneState());
             return;
         }
 
@@ -84,7 +90,7 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
                 .doOnSuccess(s -> {
                     cache.setUserPhone(userPhone);
                     cache.setAction(Constants.REGISTRATION);
-                    router.proceedToNextScreen();
+                    router.proceedFromRegisterToVerificationScreen();
                 })
                 .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
                 .subscribe(s -> network.verifyWithPhoneNumber(s));

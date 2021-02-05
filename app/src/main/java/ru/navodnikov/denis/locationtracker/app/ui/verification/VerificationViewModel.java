@@ -43,7 +43,7 @@ public class VerificationViewModel extends MviViewModel<VerificationScreenState>
 
     private void saveToRepository() {
         if(cache.getAction()== Constants.REGISTRATION){
-            repo.getDao().saveUser(new User(0, cache.getUserEmail(), cache.getUserPhone(), network.getIdToken()));
+            repo.getDao().saveUser(new User(0, cache.getUserPhone(), network.getIdToken()));
         }
     }
 

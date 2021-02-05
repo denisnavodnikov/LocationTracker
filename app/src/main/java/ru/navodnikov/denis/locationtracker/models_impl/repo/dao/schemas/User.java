@@ -7,14 +7,12 @@ import androidx.room.PrimaryKey;
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String email;
-    private String phone;
+    private String emailOrPhone;
     private String token;
 
-    public User(int id, String email, String phone, String token) {
+    public User(int id, String emailOrPhone, String token) {
         this.id = id;
-        this.email = email;
-        this.phone = phone;
+        this.emailOrPhone = emailOrPhone;
         this.token = token;
     }
 
@@ -26,20 +24,12 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailOrPhone() {
+        return emailOrPhone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        phone = phone;
+    public void setEmailOrPhone(String emailOrPhone) {
+        this.emailOrPhone = emailOrPhone;
     }
 
     public String getToken() {

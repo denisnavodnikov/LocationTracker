@@ -12,9 +12,7 @@ public class RegisterContract {
     }
 
     public interface View extends FragmentContract.View {
-        void showErrorEmptyUserEmail();
-
-        void showErrorEmptyUserPhone();
+        void showErrorEmptyUserEmailOrPhone();
 
         void showErrorEmptyUserPassword();
 
@@ -32,12 +30,15 @@ public class RegisterContract {
 
     public interface Host extends FragmentContract.Host {
         void proceedFromRegisterToVerificationScreen();
+        void proceedFromRegisterToTrackingScreen();
         void showError(int error);
     }
 
 
 
     public interface Router {
-        void proceedToNextScreen();
+        void proceedFromRegisterToVerificationScreen();
+
+        void proceedFromRegisterToTrackingScreen();
     }
 }

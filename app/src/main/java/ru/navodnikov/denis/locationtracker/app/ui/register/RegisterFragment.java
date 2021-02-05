@@ -80,11 +80,18 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
     }
 
     @Override
-    public void proceedToNextScreen() {
+    public void proceedFromRegisterToVerificationScreen() {
         if (hasHost()) {
             getFragmentHost().proceedFromRegisterToVerificationScreen();
         }
 
+    }
+
+    @Override
+    public void proceedFromRegisterToTrackingScreen() {
+        if (hasHost()) {
+            getFragmentHost().proceedFromRegisterToTrackingScreen();
+        }
     }
 
     @Override
@@ -96,12 +103,7 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
 
     @Override
-    public void showErrorEmptyUserEmail() {
-        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
-    }
-
-    @Override
-    public void showErrorEmptyUserPhone() {
+    public void showErrorEmptyUserEmailOrPhone() {
         fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
     }
 
@@ -118,7 +120,7 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void showErrorNotUserEmail() {
-        fragmentRegisterBinding.passwordForRegister.setError(getContext().getString(R.string.invalid_user_email));
+        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.invalid_user_email));
     }
 
     @Override

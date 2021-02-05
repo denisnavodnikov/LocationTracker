@@ -6,13 +6,12 @@ import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
 
 public class RegisterScreenState extends ScreenState<RegisterContract.View> {
 
-    public static final int EMPTY_USER_EMAIL = 2;
-    public static final int EMPTY_USER_PHONE = 3;
-    public static final int EMPTY_PASSWORD = 4;
-    public static final int SHORT_PASSWORD = 5;
-    public static final int NOT_USER_EMAIL = 6;
-    private static final int REGISTER = 7;
-    private static final int ERROR_REGISTER = 8;
+    public static final int EMPTY_USER_EMAIL_OR_PHONE = 0;
+    public static final int EMPTY_PASSWORD = 1;
+    public static final int SHORT_PASSWORD = 2;
+    public static final int NOT_USER_EMAIL = 3;
+    private static final int REGISTER = 4;
+    private static final int ERROR_REGISTER = 5;
 
     private final int action;
 
@@ -22,12 +21,10 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
 
 
 
-    public static RegisterScreenState createErrorEmptyUserEmailState() {
-        return new RegisterScreenState(EMPTY_USER_EMAIL);
+    public static RegisterScreenState createErrorEmptyUserEmailOrPhoneState() {
+        return new RegisterScreenState(EMPTY_USER_EMAIL_OR_PHONE);
     }
-    public static RegisterScreenState createErrorEmptyUserPhoneState() {
-        return new RegisterScreenState(EMPTY_USER_PHONE);
-    }
+
     public static RegisterScreenState createErrorEmptyPasswordState() {
         return new RegisterScreenState(EMPTY_PASSWORD);
     }
@@ -51,11 +48,8 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
     @Override
     public void visit(RegisterContract.View registerScreen) {
 
-        if (EMPTY_USER_EMAIL ==action){
-            registerScreen.showErrorEmptyUserEmail();
-        }
-        else if (EMPTY_USER_PHONE ==action){
-            registerScreen.showErrorEmptyUserPhone();
+        if (EMPTY_USER_EMAIL_OR_PHONE ==action){
+            registerScreen.showErrorEmptyUserEmailOrPhone();
         }
         else if (EMPTY_PASSWORD ==action){
             registerScreen.showErrorEmptyUserPassword();
