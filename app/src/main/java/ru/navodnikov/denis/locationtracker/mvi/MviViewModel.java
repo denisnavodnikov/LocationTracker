@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class MviViewModel <T> extends ViewModel implements FragmentContract.ViewModel<T>{
-    private final CompositeDisposable onStopDisposables = new CompositeDisposable();
+
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
     private final MutableLiveData<T> stateHolder = new MutableLiveData<>();
 
@@ -25,16 +25,9 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
     @CallSuper
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
     protected void onAny(LifecycleOwner owner, Lifecycle.Event event) {
-        if (event == Lifecycle.Event.ON_STOP) {
-            onStopDisposables.clear();
-        }
         if (event == Lifecycle.Event.ON_DESTROY) {
             onDestroyDisposables.clear();
         }
-    }
-
-    protected void observeTillStop(Disposable... subscriptions) {
-        onStopDisposables.addAll(subscriptions);
     }
 
     protected void observeTillDestroy(Disposable... subscriptions) {
@@ -53,7 +46,4 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
         return onDestroyDisposables.size() != 0;
     }
 
-    protected boolean hasOnStopDisposables() {
-        return onStopDisposables.size() != 0;
-    }
 }

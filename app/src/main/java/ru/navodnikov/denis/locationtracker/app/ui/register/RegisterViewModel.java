@@ -3,6 +3,8 @@ package ru.navodnikov.denis.locationtracker.app.ui.register;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.lifecycle.Lifecycle;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -55,21 +57,23 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         Pair<String, String> loginUser = new Pair<>(userEmail, password);
 
         Single<Pair<String, String>> single = Single.just(loginUser);
-        Disposable disposable = single
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(item -> {
-                    postState(RegisterScreenState.createRegisterState());
-                })
-                .doOnSuccess(pair -> {
-                    cache.setUserEmail(userEmail);
-                    cache.setPassword(password);
-                    cache.setAction(Constants.REGISTRATION);
-                    repo.getDao().saveUser(new User(0, userEmail, network.getIdToken()));
-                    router.proceedFromRegisterToTrackingScreen();
-                })
-                .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
-                .subscribe(pair -> network.registerWithEmailNumber(pair.first, pair.second));
+        if (!hasOnDestroyDisposables()) {
+            observeTillDestroy(single
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(item -> {
+                        postState(RegisterScreenState.createRegisterState());
+                    })
+                    .doOnSuccess(pair -> {
+                        cache.setUserEmail(userEmail);
+                        cache.setPassword(password);
+                        cache.setAction(Constants.REGISTRATION);
+                        repo.getDao().saveUser(new User(0, userEmail, network.getIdToken()));
+                        router.proceedFromRegisterToTrackingScreen();
+                    })
+                    .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
+                    .subscribe(pair -> network.registerWithEmailNumber(pair.first, pair.second)));
+        }
     }
 
 
@@ -81,19 +85,21 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         }
 
         Single<String> single = Single.just(userPhone);
-        Disposable disposable = single
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(s -> {
-                    postState(RegisterScreenState.createRegisterState());
-                })
-                .doOnSuccess(s -> {
-                    cache.setUserPhone(userPhone);
-                    cache.setAction(Constants.REGISTRATION);
-                    router.proceedFromRegisterToVerificationScreen();
-                })
-                .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
-                .subscribe(s -> network.verifyWithPhoneNumber(s));
+        if (!hasOnDestroyDisposables()) {
+            observeTillDestroy(single
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(s -> {
+                        postState(RegisterScreenState.createRegisterState());
+                    })
+                    .doOnSuccess(s -> {
+                        cache.setUserPhone(userPhone);
+                        cache.setAction(Constants.REGISTRATION);
+                        router.proceedFromRegisterToVerificationScreen();
+                    })
+                    .doOnError(throwable -> postState(RegisterScreenState.createErrorRegisterState()))
+                    .subscribe(s -> network.verifyWithPhoneNumber(s)));
+        }
     }
 
 

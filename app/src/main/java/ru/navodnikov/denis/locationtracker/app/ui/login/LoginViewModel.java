@@ -41,18 +41,20 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
         Pair<String, String> loginUser = new Pair<>(userEmail, password);
 
         Single<Pair<String, String>> single = Single.just(loginUser);
-        Disposable disposable = single
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(item -> {
-                    postState(LoginScreenState.createLoginState());
-                })
-                .doOnSuccess(pair -> {
-                    router.proceedToTrackingScreen();
-                })
-                .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
-                .subscribe(pair -> network.loginWithEmail(userEmail, password));
+        if (!hasOnDestroyDisposables()) {
+            observeTillDestroy(single
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(item -> {
+                        postState(LoginScreenState.createLoginState());
+                    })
+                    .doOnSuccess(pair -> {
+                        router.proceedToTrackingScreen();
+                    })
+                    .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
+                    .subscribe(pair -> network.loginWithEmail(userEmail, password)));
 
+        }
     }
 
     @Override
@@ -63,20 +65,20 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
         }
 
         Single<String> single = Single.just(userPhone);
-        Disposable disposable = single
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(item -> {
-                    postState(LoginScreenState.createLoginState());
-                })
-                .doOnSuccess(s -> {
-                    router.proceedToVerificationScreen();
-                })
-                .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
-                .subscribe(s -> network.verifyWithPhoneNumber(s));
+        if (!hasOnDestroyDisposables()) {
+            observeTillDestroy(single
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(item -> {
+                        postState(LoginScreenState.createLoginState());
+                    })
+                    .doOnSuccess(s -> {
+                        router.proceedToVerificationScreen();
+                    })
+                    .doOnError(throwable -> postState(LoginScreenState.createErrorLoginState()))
+                    .subscribe(s -> network.verifyWithPhoneNumber(s)));
+        }
     }
-
-
 
 
 }
