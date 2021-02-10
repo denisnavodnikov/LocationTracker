@@ -1,11 +1,9 @@
 package ru.navodnikov.denis.locationtracker.app.bg;
 
 public class SendTrackerContract {
-    public interface ServiceModel {
+    public interface LocationModel {
 
         void sendLocationStart();
     }
-    public interface SendTrackerContext {
 
-    }
 }

@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,13 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.VerificationScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentVerificationBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class VerificationFragment extends HostedFragment<VerificationScreenState, VerificationContract.ViewModel, VerificationContract.Host> implements VerificationContract.View, VerificationContract.Router {
+public class VerificationFragment extends HostedFragment<VerificationScreenState, VerificationContract.ViewModel, VerificationContract.Host> implements VerificationContract.View {
 
     private FragmentVerificationBinding fragmentVerificationBinding;
 
@@ -31,7 +30,7 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
 
     @Override
     protected VerificationContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new VerificationViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(VerificationViewModel.class);
+        return new ViewModelProvider(this, new VerificationViewModelFactory()).get(VerificationViewModel.class);
     }
 
     @Override
@@ -62,14 +61,9 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
             public void afterTextChanged(Editable s) {
             }
         });
+
     }
 
-    @Override
-    public void proceedToNextScreen() {
-        if (hasHost()) {
-            getFragmentHost().proceedFromVerificationToTrackingScreen();
-        }
-    }
 
     @Override
     public void hideProgress() {
@@ -81,5 +75,10 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
         if (hasHost()) {
             getFragmentHost().showError(errorString);
         }
+    }
+
+    @Override
+    public void proceedFromVerificationToTrackingScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_verificationFragment_to_trackingFragment);
     }
 }

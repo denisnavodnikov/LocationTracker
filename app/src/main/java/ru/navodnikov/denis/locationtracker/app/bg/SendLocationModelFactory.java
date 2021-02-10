@@ -1,18 +1,25 @@
 package ru.navodnikov.denis.locationtracker.app.bg;
 
+import javax.inject.Inject;
+
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.models.AppModule;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
 
 public class SendLocationModelFactory {
+    @Inject
+    TrackerRepo repo;
+    @Inject
+    Network network;
 
-    public AppModule appComponent;
 
     public SendLocationModelFactory() {
-        this.appComponent = TrackerApp.getInstance().getAppComponent();
+        //TODO: change other module
+        TrackerApp.getComponent().inject(this);
     }
 
-    public SendTrackerContract.ServiceModel create() {
-        return new SendLocationModel(appComponent.getTrackerRepo(), appComponent.getCache());
+    public SendTrackerContract.LocationModel create() {
+        return new SendLocationModel(repo, network);
     }
 }

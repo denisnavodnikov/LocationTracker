@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
@@ -23,19 +23,16 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
-public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, RegisterContract.Router, View.OnClickListener {
+public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, View.OnClickListener {
 
     private FragmentRegisterBinding fragmentRegisterBinding;
 
-
     public RegisterFragment() {
-
     }
-
 
     @Override
     protected RegisterContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new RegisterViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(RegisterViewModel.class);
+        return new ViewModelProvider(this, new RegisterViewModelFactory()).get(RegisterViewModel.class);
     }
 
 
@@ -81,17 +78,12 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void proceedFromRegisterToVerificationScreen() {
-        if (hasHost()) {
-            getFragmentHost().proceedFromRegisterToVerificationScreen();
-        }
-
+        NavHostFragment.findNavController(this).navigate(R.id.action_registerFragment_to_verificationFragment);
     }
 
     @Override
     public void proceedFromRegisterToTrackingScreen() {
-        if (hasHost()) {
-            getFragmentHost().proceedFromRegisterToTrackingScreen();
-        }
+        NavHostFragment.findNavController(this).navigate(R.id.action_registerFragment_to_trackingFragment);
     }
 
     @Override

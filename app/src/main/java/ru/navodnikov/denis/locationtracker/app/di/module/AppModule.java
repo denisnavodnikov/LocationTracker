@@ -1,57 +1,56 @@
-package ru.navodnikov.denis.locationtracker.models_impl;
+package ru.navodnikov.denis.locationtracker.app.di.module;
 
 import android.content.Context;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import javax.inject.Singleton;
 
-import ru.navodnikov.denis.locationtracker.models.AppModule;
-import ru.navodnikov.denis.locationtracker.models.cache.Cache;
+import dagger.Module;
+import dagger.Provides;
 import ru.navodnikov.denis.locationtracker.models.location.Location;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
-import ru.navodnikov.denis.locationtracker.models_impl.cache.CacheImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.network.TrackerNetwork;
 
-public class DefaultAppModule implements AppModule {
+@Module
+public class AppModule {
     private final Context app;
-    private final Cache cache;
 
-    public DefaultAppModule(Context app) {
+    public AppModule(Context app) {
         this.app = app;
-        cache = new CacheImpl();
     }
 
-    @Override
+
+    @Provides
+    @Singleton
     public Context getApp() {
         return app;
     }
 
-    @Override
+    @Provides
+    @Singleton
     public TrackerDao getTrackerDao() {
         return new TrackerDaoImpl(app);
     }
 
-    @Override
+    @Provides
+    @Singleton
     public TrackerRepo getTrackerRepo() {
         return new TrackerRepository(getTrackerDao());
     }
 
-    @Override
-    public Cache getCache() {
-        return cache;
-    }
 
-    @Override
+    @Provides
+    @Singleton
     public Network getTrackerNetwork() {
         return new TrackerNetwork(app);
     }
 
-    @Override
+    @Provides
+    @Singleton
     public Location getTrackerLocation() {
         return new TrackerLocation(app);
     }

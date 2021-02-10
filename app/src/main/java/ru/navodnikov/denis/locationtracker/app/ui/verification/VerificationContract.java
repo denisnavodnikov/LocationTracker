@@ -14,17 +14,15 @@ public class VerificationContract {
         void hideProgress();
 
         void showVerificationFailed(int verification_failed);
+
+        void proceedFromVerificationToTrackingScreen();
     }
 
     public interface Host extends FragmentContract.Host {
 
-        void proceedFromVerificationToTrackingScreen();
+
         void showError(int error);
     }
 
 
-    public interface Router {
-        void proceedToNextScreen();
-
-    }
 }

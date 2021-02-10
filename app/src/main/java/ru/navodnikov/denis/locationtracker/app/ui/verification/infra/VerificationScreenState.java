@@ -6,7 +6,8 @@ import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
 
 public class VerificationScreenState extends ScreenState<VerificationContract.View> {
 
-    public static final int ERROR_VERIFICATION =1;
+    public static final int ERROR_VERIFICATION = 0;
+    public static final int TO_TRACKING = 1;
 
     private final int action;
 
@@ -18,11 +19,17 @@ public class VerificationScreenState extends ScreenState<VerificationContract.Vi
         return new VerificationScreenState(ERROR_VERIFICATION);
     }
 
+    public static VerificationScreenState createMoveToTrackingState() {
+        return new VerificationScreenState(TO_TRACKING);
+    }
+
     @Override
     public void visit(VerificationContract.View verificationScreen) {
-        if (ERROR_VERIFICATION == action){
+        if (ERROR_VERIFICATION == action) {
             verificationScreen.hideProgress();
             verificationScreen.showVerificationFailed(R.string.verification_failed);
+        }else if(TO_TRACKING == action){
+            verificationScreen.proceedFromVerificationToTrackingScreen();
         }
     }
 }

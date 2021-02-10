@@ -10,6 +10,9 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
     private static final int PASSWORD = 2;
     private static final int LOGIN = 3;
     private static final int ERROR_LOGIN = 4;
+    private static final int TO_VERIFICATION = 5;
+    private static final int TO_TRACKING = 6;
+
 
     private final int action;
     private final int error;
@@ -35,20 +38,31 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
         return new LoginScreenState(ERROR_LOGIN);
     }
 
+    public static LoginScreenState createMoveToVerificationState() {
+        return new LoginScreenState(TO_VERIFICATION);
+    }
+
+    public static LoginScreenState createMoveToTrackingState() {
+        return new LoginScreenState(TO_TRACKING);
+    }
+
+
     @Override
     public void visit(LoginContract.View loginScreen) {
+
         if (USERNAME == action) {
             loginScreen.showErrorEmptyUserName();
         } else if (PASSWORD == action) {
             loginScreen.showErrorEmptyPassword();
-
-        }
-        else if(LOGIN == action){
+        } else if (LOGIN == action) {
             loginScreen.showProgress();
-        }
-        else if(ERROR_LOGIN == action){
+        } else if (ERROR_LOGIN == action) {
             loginScreen.hideProgress();
             loginScreen.showLoginFailed(R.string.login_failed);
+        } else if (TO_VERIFICATION == action) {
+            loginScreen.proceedFromLoginToVerificationScreen();
+        } else if (TO_TRACKING == action) {
+            loginScreen.proceedFromLoginToTrackingScreen();
         }
     }
 }

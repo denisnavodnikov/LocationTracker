@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
@@ -23,7 +23,7 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
-public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, LoginContract.Router, View.OnClickListener {
+public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, View.OnClickListener {
     private FragmentLoginBinding fragmentLoginBinding;
 
     public LoginFragment() {
@@ -37,7 +37,7 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
 
     @Override
     protected LoginContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new LoginViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(LoginViewModel.class);
+        return new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
     }
 
 
@@ -84,24 +84,20 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
         }
     }
 
-    @Override
-    public void proceedToVerificationScreen() {
-        if (hasHost()) {
-            getFragmentHost().proceedFromLoginToVerificationScreen();
-        }
-    }
-
-    @Override
-    public void proceedToTrackingScreen() {
-        if (hasHost()) {
-            getFragmentHost().proceedFromLoginToTrackingScreen();
-        }
-    }
-
 
     @Override
     public void showErrorEmptyUserName() {
         fragmentLoginBinding.emailOrPhoneForLogin.setError(getContext().getString(R.string.empty_fild_error));
+    }
+
+    @Override
+    public void proceedFromLoginToVerificationScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_verificationFragment);
+    }
+
+    @Override
+    public void proceedFromLoginToTrackingScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_trackingFragment);
     }
 
 

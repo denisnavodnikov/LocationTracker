@@ -26,7 +26,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleEmitter;
+import io.reactivex.rxjava3.core.SingleOnSubscribe;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
 
@@ -52,6 +56,7 @@ public class TrackerNetwork implements Network {
                     if (task.isSuccessful()) {
 //                        signInWithPhoneAuthCredential(credential);
                         Log.d("TAG", "onVerificationCompleted:" + credential);
+
                     } else {
                         Log.w("log", "createUserWithPhone:failure", task.getException());
                     }
@@ -103,57 +108,69 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public void loginWithEmail(String username, String password) {
-        mAuth.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("log", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("log", "signInWithEmail:failure", task.getException());
-                        }
-
+    public Single<Object> loginWithEmail(String username, String password) {
+        return Single.create(emitter -> mAuth.signInWithEmailAndPassword(username, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("log", "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        emitter.onSuccess(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("log", "signInWithEmail:failure", task.getException());
+                        emitter.onError(task.getException());
                     }
-                });
-    }
 
-    @Override
-    public void verifyWithPhoneNumber(String userPhone) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(userPhone)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity((Activity) context)                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+                })
+//                .addOnFailureListener()
+        );
+        //TODO: addOnFailureListener
 
     }
 
     @Override
-    public void verificationWithSMS(String smsCode) {
-        credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
-        mAuth.signInWithCredential(credential).addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("TAG", "signInWithCredential:success");
-                    FirebaseUser user = task.getResult().getUser();
-                    getUserToken(user);
-                } else {
-                    // Sign in failed, display a message and update the UI
-                    Log.w("TAG", "signInWithCredential:failure", task.getException());
-                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        // The verification code entered was invalid
+    public Single<Object> verifyWithPhoneNumber(String userPhone) {
+        return Single.create(emitter -> {
+            PhoneAuthOptions options =
+                    PhoneAuthOptions.newBuilder(mAuth)
+                            .setPhoneNumber(userPhone)       // Phone number to verify
+                            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                            .setActivity((Activity) context)                 // Activity (for callback binding)
+                            .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                            .build();
+            PhoneAuthProvider.verifyPhoneNumber(options);
+            // TODO: do return result
+        });
+
+
+    }
+
+    @Override
+    public Single<Object> verificationWithSMS(String smsCode) {
+        return Single.create(emitter -> {
+            credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
+            mAuth.signInWithCredential(credential).addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAG", "signInWithCredential:success");
+                        FirebaseUser user = task.getResult().getUser();
+                        getUserToken(user);
+                        emitter.onSuccess(user);
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        Log.w("TAG", "signInWithCredential:failure", task.getException());
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            // The verification code entered was invalid
+                            emitter.onSuccess(task.getException());
+                        }
                     }
                 }
-            }
+            });
         });
+
     }
 
     @Override
@@ -205,8 +222,8 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public void registerWithEmailNumber(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
+    public Single<Object> registerWithEmailNumber(String email, String password) {
+        return Single.create(emitter -> mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -224,7 +241,8 @@ public class TrackerNetwork implements Network {
 
                         // ...
                     }
-                });
+                }));
+
     }
 
 

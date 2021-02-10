@@ -15,6 +15,7 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
     private final MutableLiveData<T> stateHolder = new MutableLiveData<>();
 
+    @Override
     public MutableLiveData<T> getStateObservable() {
         return stateHolder;
     }
@@ -29,6 +30,7 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
             onDestroyDisposables.clear();
         }
     }
+
 
     protected void observeTillDestroy(Disposable... subscriptions) {
         onDestroyDisposables.addAll(subscriptions);

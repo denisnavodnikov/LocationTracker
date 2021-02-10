@@ -1,32 +1,20 @@
 package ru.navodnikov.denis.locationtracker.app.bg;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.util.Log;
-
-import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import ru.navodnikov.denis.locationtracker.models.cache.Cache;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
-public class SendLocationModel implements SendTrackerContract.ServiceModel {
+public class SendLocationModel implements SendTrackerContract.LocationModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final TrackerRepo repo;
-    private final Cache cache;
+    private final Network network;
 
 
-    public SendLocationModel(TrackerRepo repo, Cache cache) {
+    public SendLocationModel(TrackerRepo repo, Network network) {
         this.repo = repo;
-        this.cache = cache;
+        this.network = network;
     }
 // TODO поменяять логику работы метода
     @Override

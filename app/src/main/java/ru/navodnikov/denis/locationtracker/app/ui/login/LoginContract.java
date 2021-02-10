@@ -11,6 +11,7 @@ public class LoginContract {
 
         void loginWithPhone(String emailOrPhone);
     }
+
     public interface View extends FragmentContract.View {
         void showErrorEmptyPassword();
 
@@ -21,18 +22,16 @@ public class LoginContract {
         void showLoginFailed(@StringRes Integer errorString);
 
         void showErrorEmptyUserName();
-    }
-    public interface Host extends FragmentContract.Host {
 
         void proceedFromLoginToVerificationScreen();
+
         void proceedFromLoginToTrackingScreen();
+    }
+
+    public interface Host extends FragmentContract.Host {
+
         void showError(int error);
 
     }
 
-    public interface Router {
-        void proceedToVerificationScreen();
-
-        void proceedToTrackingScreen();
-    }
 }

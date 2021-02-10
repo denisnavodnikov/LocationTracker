@@ -6,11 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-
 public class SendWorker extends Worker {
 
-    private final SendTrackerContract.ServiceModel model;
+    private final SendTrackerContract.LocationModel model;
 
     public SendWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -20,9 +18,7 @@ public class SendWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        // отправка местоположения в фаирбэйс
         model.sendLocationStart();
-
         return Result.success();
     }
 }

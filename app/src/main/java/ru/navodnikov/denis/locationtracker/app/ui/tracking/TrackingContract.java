@@ -15,20 +15,12 @@ public class TrackingContract {
     public interface View extends FragmentContract.View {
         void showError(int error);
         void showMassage(int massage);
+        void proceedToStartScreen();
     }
 
     public interface Host extends FragmentContract.Host {
 
-        void proceedToStartScreen();
         void showError(int error);
     }
 
-
-    public interface Router {
-        void proceedToNextScreen();
-
-        void launchWorker();
-
-
-    }
 }

@@ -9,21 +9,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, TrackingContract.Router,  View.OnClickListener {
+public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View,  View.OnClickListener {
 
     private FragmentTrackingBinding fragmentTrackingBinding;
 
@@ -45,7 +42,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
 
     @Override
     protected TrackingContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new TrackingViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(TrackingViewModel.class);
+        return new ViewModelProvider(this, new TrackingViewModelFactory()).get(TrackingViewModel.class);
     }
 
 
@@ -67,15 +64,8 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
         fragmentTrackingBinding = null;
     }
 
-    @Override
-    public void proceedToNextScreen() {
-        FirebaseAuth.getInstance().signOut();
-        if (hasHost()) {
-            getFragmentHost().proceedToStartScreen();
-        }
-    }
 
-    @Override
+
     public void launchWorker() {
         if (hasHost()) {
 //            TODO здесь происходит старт работника, который отправляет местоположение в фоне
@@ -95,6 +85,12 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     @Override
     public void showMassage(int massage) {
         fragmentTrackingBinding.textViewInfo.setText(massage);
+    }
+
+    @Override
+    public void proceedToStartScreen() {
+        FirebaseAuth.getInstance().signOut();
+        NavHostFragment.findNavController(this).navigate(R.id.action_trackingFragment_to_startFragment);
     }
 
 

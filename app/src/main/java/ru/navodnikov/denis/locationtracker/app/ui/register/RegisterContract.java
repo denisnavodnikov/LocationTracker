@@ -26,19 +26,14 @@ public class RegisterContract {
 
         void showLoginFailed(@StringRes Integer errorString);
 
+        void proceedFromRegisterToVerificationScreen();
+        void proceedFromRegisterToTrackingScreen();
+
     }
 
     public interface Host extends FragmentContract.Host {
-        void proceedFromRegisterToVerificationScreen();
-        void proceedFromRegisterToTrackingScreen();
+
         void showError(int error);
     }
 
-
-
-    public interface Router {
-        void proceedFromRegisterToVerificationScreen();
-
-        void proceedFromRegisterToTrackingScreen();
-    }
 }

@@ -6,6 +6,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import io.reactivex.rxjava3.core.Single;
+import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+
 public interface Network {
 
     String getIdToken();
@@ -16,15 +19,15 @@ public interface Network {
 
     Context getContext();
 
-    void loginWithEmail(String username, String password);
+    Single<Object> loginWithEmail(String username, String password);
 
-    void verifyWithPhoneNumber(String userEmail);
+    Single<Object> verifyWithPhoneNumber(String userEmail);
 
-    void verificationWithSMS(String smsCode);
+    Single<Object> verificationWithSMS(String smsCode);
 
     void getUserToken(FirebaseUser user);
 
     void startTracking();
 
-    void registerWithEmailNumber(String email, String password);
+    Single<Object> registerWithEmailNumber(String email, String password);
 }

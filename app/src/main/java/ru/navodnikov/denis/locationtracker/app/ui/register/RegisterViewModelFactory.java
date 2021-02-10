@@ -4,24 +4,27 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.navodnikov.denis.locationtracker.models.AppModule;
-import ru.navodnikov.denis.locationtracker.models.cache.Cache;
-import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
+import javax.inject.Inject;
+
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
 public class RegisterViewModelFactory extends ViewModelProvider.NewInstanceFactory {
-    private final RegisterContract.Router router;
-    private final AppModule appComponent;
+    @Inject
+    TrackerRepo repo;
+    @Inject
+    Network network;
 
-    public RegisterViewModelFactory(AppModule appComponent, RegisterContract.Router router) {
-        this.appComponent = appComponent;
-        this.router = router;
-
+    public RegisterViewModelFactory() {
+        super();
+        TrackerApp.getComponent().inject(this);
     }
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == RegisterViewModel.class) {
-            return (T) new RegisterViewModel(router, appComponent.getTrackerRepo(), appComponent.getCache(), appComponent.getTrackerNetwork());
+            return (T) new RegisterViewModel(repo, network);
         }
         return null;
     }

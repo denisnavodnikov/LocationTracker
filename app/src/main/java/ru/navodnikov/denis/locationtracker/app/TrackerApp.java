@@ -2,25 +2,25 @@ package ru.navodnikov.denis.locationtracker.app;
 
 import android.app.Application;
 
-import ru.navodnikov.denis.locationtracker.models.AppModule;
-import ru.navodnikov.denis.locationtracker.models_impl.DefaultAppModule;
+import ru.navodnikov.denis.locationtracker.app.di.components.AppComponent;
+import ru.navodnikov.denis.locationtracker.app.di.components.DaggerAppComponent;
+import ru.navodnikov.denis.locationtracker.app.di.module.AppModule;
 
 public class TrackerApp extends Application {
     private static TrackerApp instance;
-    private AppModule appComponent;
+    private static AppComponent component;
 
-    public static TrackerApp getInstance() {
-        return instance;
+    public static AppComponent getComponent() {
+        return component;
     }
-
-    public AppModule getAppComponent() {
-        return appComponent;
+    public static TrackerApp getContext() {
+        return instance;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        appComponent = new DefaultAppModule(this);
+        component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 }

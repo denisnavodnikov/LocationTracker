@@ -4,23 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.navodnikov.denis.locationtracker.models.AppModule;
+import javax.inject.Inject;
+
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
 public class VerificationViewModelFactory extends ViewModelProvider.NewInstanceFactory {
-    private final VerificationContract.Router router;
-    private final AppModule appComponent;
+    @Inject
+    TrackerRepo repo;
+    @Inject
+    Network network;
 
-    public VerificationViewModelFactory(AppModule appComponent, VerificationContract.Router router) {
+    public VerificationViewModelFactory() {
         super();
-        this.appComponent = appComponent;
-        this.router = router;
+        TrackerApp.getComponent().inject(this);
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == VerificationViewModel.class) {
-            return (T) new VerificationViewModel(router, appComponent.getTrackerRepo(), appComponent.getCache(), appComponent.getTrackerNetwork());
+            return (T) new VerificationViewModel(repo, network);
         }
         return null;
     }

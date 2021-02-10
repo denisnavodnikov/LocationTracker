@@ -5,20 +5,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 
 
-public class StartFragment extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, StartContract.Router, View.OnClickListener {
+public class StartFragment extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, View.OnClickListener {
 
     private FragmentStartBinding fragmentStartBinding;
 
@@ -35,7 +34,7 @@ public class StartFragment extends HostedFragment<StartScreenState, StartContrac
 
     @Override
     protected StartContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new StartViewModelFactory(TrackerApp.getInstance().getAppComponent(), this)).get(StartViewModel.class);
+        return new ViewModelProvider(this, new StartViewModelFactory()).get(StartViewModel.class);
     }
 
 
@@ -62,31 +61,27 @@ public class StartFragment extends HostedFragment<StartScreenState, StartContrac
 
 
     @Override
-    public void proceedToNextScreen(int button) {
-
-        if (hasHost()) {
-            if (button == Constants.BUTTON_LOGIN) {
-                getFragmentHost().proceedToLoginScreen();
-            }
-            if (button == Constants.BUTTON_REGISTER) {
-                getFragmentHost().proceedToRegisterScreen();
-            }
-        }
-
-    }
-
-    @Override
-    public void proceedToTrackingScreenWithOutLogin() {
-        getFragmentHost().proceedToTrackingScreen();
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.start_login) {
-            proceedToNextScreen(Constants.BUTTON_LOGIN);
+            getModel().onItemClicked(R.id.start_login);
         }
         if (v.getId() == R.id.start_register) {
-            proceedToNextScreen(Constants.BUTTON_REGISTER);
+            getModel().onItemClicked(R.id.start_register);
         }
+    }
+
+    @Override
+    public void proceedToRegisterScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_startFragment_to_registerFragment);
+    }
+
+    @Override
+    public void proceedToTrackingScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_startFragment_to_trackingFragment);
+    }
+
+    @Override
+    public void proceedToLoginScreen() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_startFragment_to_loginFragment);
     }
 }

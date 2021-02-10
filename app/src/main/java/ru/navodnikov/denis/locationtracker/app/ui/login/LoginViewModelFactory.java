@@ -4,24 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.navodnikov.denis.locationtracker.models.AppModule;
+import javax.inject.Inject;
+
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 
 public class LoginViewModelFactory extends ViewModelProvider.NewInstanceFactory  {
-    private final AppModule appComponent;
-    private final LoginContract.Router router;
+    @Inject
+    Network network;
 
 
-    public LoginViewModelFactory(AppModule appComponent, LoginContract.Router router) {
+    public LoginViewModelFactory() {
         super();
-        this.appComponent = appComponent;
-        this.router = router;
+        TrackerApp.getComponent().inject(this);
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == LoginViewModel.class) {
-            return (T) new LoginViewModel(router, appComponent.getCache(), appComponent.getTrackerNetwork());
+            return (T) new LoginViewModel(network);
         }
         return null;
     }
