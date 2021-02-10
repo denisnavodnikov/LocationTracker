@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.InputType;
@@ -26,6 +28,7 @@ import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromVie
 public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, View.OnClickListener {
 
     private FragmentRegisterBinding fragmentRegisterBinding;
+    private NavController navController;
 
     public RegisterFragment() {
     }
@@ -67,6 +70,7 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
             }
         });
         fragmentRegisterBinding.registerButton.setOnClickListener(this);
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
 
@@ -78,12 +82,12 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void proceedFromRegisterToVerificationScreen() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_registerFragment_to_verificationFragment);
+        navController.navigate(R.id.action_registerFragment_to_verificationFragment);
     }
 
     @Override
     public void proceedFromRegisterToTrackingScreen() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_registerFragment_to_trackingFragment);
+        navController.navigate(R.id.action_registerFragment_to_trackingFragment);
     }
 
     @Override

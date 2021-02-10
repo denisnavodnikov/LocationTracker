@@ -19,7 +19,6 @@ import ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationContr
 
 public class MainActivity extends AppCompatActivity implements LoginContract.Host, RegisterContract.Host, StartContract.Host, TrackingContract.Host, VerificationContract.Host {
 
-    private NavController navController;
     private CoordinatorLayout coordinator;
 
     @Override
@@ -27,10 +26,7 @@ public class MainActivity extends AppCompatActivity implements LoginContract.Hos
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinator = findViewById(R.id.coordinator);
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host);
-        navController = navHostFragment.getNavController();
-//        navController = Navigation.findNavController(this, R.id.nav_host);
+
     }
 
     @Override

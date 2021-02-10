@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
@@ -22,7 +24,7 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 public class VerificationFragment extends HostedFragment<VerificationScreenState, VerificationContract.ViewModel, VerificationContract.Host> implements VerificationContract.View {
 
     private FragmentVerificationBinding fragmentVerificationBinding;
-
+    private NavController navController;
 
     public VerificationFragment() {
 
@@ -61,7 +63,7 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
             public void afterTextChanged(Editable s) {
             }
         });
-
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
 
@@ -79,6 +81,6 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
 
     @Override
     public void proceedFromVerificationToTrackingScreen() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_verificationFragment_to_trackingFragment);
+        navController.navigate(R.id.action_verificationFragment_to_trackingFragment);
     }
 }

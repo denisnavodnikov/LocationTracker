@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 
@@ -23,6 +25,7 @@ import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
 public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View,  View.OnClickListener {
 
     private FragmentTrackingBinding fragmentTrackingBinding;
+    private NavController navController;
 
     public TrackingFragment() {
     }
@@ -54,6 +57,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
         fragmentTrackingBinding.buttonLogOut.setOnClickListener(this);
         fragmentTrackingBinding.buttonStartTracking.setOnClickListener(this);
         fragmentTrackingBinding.buttonStopTracking.setOnClickListener(this);
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
 
@@ -90,7 +94,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     @Override
     public void proceedToStartScreen() {
         FirebaseAuth.getInstance().signOut();
-        NavHostFragment.findNavController(this).navigate(R.id.action_trackingFragment_to_startFragment);
+        navController.navigate(R.id.action_trackingFragment_to_startFragment);
     }
 
 

@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromVie
 
 public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, View.OnClickListener {
     private FragmentLoginBinding fragmentLoginBinding;
+    private NavController navController;
 
     public LoginFragment() {
     }
@@ -74,6 +77,7 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
             }
         });
         fragmentLoginBinding.loginButton.setOnClickListener(this);
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
 
@@ -92,12 +96,12 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
 
     @Override
     public void proceedFromLoginToVerificationScreen() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_verificationFragment);
+        navController.navigate(R.id.action_loginFragment_to_verificationFragment);
     }
 
     @Override
     public void proceedFromLoginToTrackingScreen() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_trackingFragment);
+        navController.navigate(R.id.action_loginFragment_to_trackingFragment);
     }
 
 
