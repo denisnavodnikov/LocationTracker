@@ -17,11 +17,16 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
 
 
     private final int action;
+    private Throwable error;
 
     public RegisterScreenState(int action) {
         this.action = action;
     }
 
+    public RegisterScreenState(int action, Throwable error) {
+        this.action = action;
+        this.error = error;
+    }
 
 
     public static RegisterScreenState createErrorEmptyUserEmailOrPhoneState() {
@@ -44,8 +49,8 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
         return new RegisterScreenState(REGISTER);
     }
 
-    public static RegisterScreenState createErrorRegisterState() {
-        return new RegisterScreenState(ERROR_REGISTER);
+    public static RegisterScreenState createErrorRegisterState(Throwable error) {
+        return new RegisterScreenState(ERROR_REGISTER, error);
     }
     public static RegisterScreenState createMoveToVerificationState() {
         return new RegisterScreenState(TO_VERIFICATION);
@@ -73,6 +78,9 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
             registerScreen.showProgress();
         }
         else if (ERROR_REGISTER == action){
+            if(error!=null){
+                error.printStackTrace();
+            }
             registerScreen.hideProgress();
             registerScreen.showLoginFailed(R.string.register_failed);
         }

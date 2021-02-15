@@ -6,14 +6,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.navodnikov.denis.locationtracker.models.location.Location;
+import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 import ru.navodnikov.denis.locationtracker.models_impl.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.network.TrackerNetwork;
+import ru.navodnikov.denis.locationtracker.models_impl.sharedpref.TrackerSharedPref;
 
 @Module
 public class AppModule {
@@ -51,7 +53,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Location getTrackerLocation() {
+    public AppLocation getTrackerLocation() {
         return new TrackerLocation(app);
+    }
+
+    @Provides
+    @Singleton
+    public SharedPref getTrackerSharedPref(){
+        return new TrackerSharedPref(app);
     }
 }

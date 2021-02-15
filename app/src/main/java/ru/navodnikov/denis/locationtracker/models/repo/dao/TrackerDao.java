@@ -1,7 +1,8 @@
 package ru.navodnikov.denis.locationtracker.models.repo.dao;
 
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
+
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 public interface TrackerDao {
-    void saveUser(User user);
+    void saveLocation(UserLocation location);
 }

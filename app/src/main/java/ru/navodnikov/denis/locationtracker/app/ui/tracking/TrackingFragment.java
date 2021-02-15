@@ -1,6 +1,10 @@
 package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +12,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -17,9 +23,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.fg.ForegroundService;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
 import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+
+import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
 
 
 public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View,  View.OnClickListener {
@@ -36,7 +45,6 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         fragmentTrackingBinding = FragmentTrackingBinding.inflate(inflater, container, false);
         View view = fragmentTrackingBinding.getRoot();
         return view;
@@ -53,7 +61,6 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        db = FirebaseFirestore.getInstance();
         fragmentTrackingBinding.buttonLogOut.setOnClickListener(this);
         fragmentTrackingBinding.buttonStartTracking.setOnClickListener(this);
         fragmentTrackingBinding.buttonStopTracking.setOnClickListener(this);
@@ -68,15 +75,6 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
         fragmentTrackingBinding = null;
     }
 
-
-
-    public void launchWorker() {
-        if (hasHost()) {
-//            TODO здесь происходит старт работника, который отправляет местоположение в фоне
-//            final WorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).build();
-//            WorkManager.getInstance(getContext()).enqueue(uploadWorkRequest);
-        }
-    }
 
     @Override
     public void showError(int error) {
@@ -109,5 +107,36 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
         else if(v.getId()==R.id.button_stop_tracking){
             getModel().stopTracking();
         }
+    }
+    @SuppressLint("InlinedApi")
+    @Override
+    public void permissionRequest(){
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION);
+
+        }
+    }
+
+    @Override
+    public void startService() {
+        Intent startServiceIntent = new Intent(getActivity(), ForegroundService.class);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            requireContext().startForegroundService(startServiceIntent);
+        } else {
+            requireContext().startService(startServiceIntent);
+        }
+
+    }
+    @Override
+    public void stopService() {
+        Intent serviceIntent = new Intent(getActivity(), ForegroundService.class);
+        requireContext().stopService(serviceIntent);
     }
 }

@@ -20,9 +20,6 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
         return stateHolder;
     }
 
-
-//    TODO переписать под трекер
-
     @CallSuper
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
     protected void onAny(LifecycleOwner owner, Lifecycle.Event event) {

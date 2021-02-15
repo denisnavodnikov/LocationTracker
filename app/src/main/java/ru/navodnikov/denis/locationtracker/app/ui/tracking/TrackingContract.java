@@ -16,6 +16,12 @@ public class TrackingContract {
         void showError(int error);
         void showMassage(int massage);
         void proceedToStartScreen();
+
+        void permissionRequest();
+
+        void startService();
+
+        void stopService();
     }
 
     public interface Host extends FragmentContract.Host {

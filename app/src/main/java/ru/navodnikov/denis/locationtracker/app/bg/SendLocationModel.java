@@ -2,23 +2,32 @@ package ru.navodnikov.denis.locationtracker.app.bg;
 
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 
 public class SendLocationModel implements SendTrackerContract.LocationModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final TrackerRepo repo;
     private final Network network;
+    private final AppLocation appLocation;
+    private final SharedPref sharedPref;
 
-
-    public SendLocationModel(TrackerRepo repo, Network network) {
+    public SendLocationModel(TrackerRepo repo, Network network, AppLocation appLocation, SharedPref sharedPref) {
         this.repo = repo;
         this.network = network;
+        this.appLocation = appLocation;
+        this.sharedPref = sharedPref;
     }
 // TODO поменяять логику работы метода
     @Override
     public void sendLocationStart() {
+//        appLocation.getLocation();
+//        repo.getDao().saveLocation();
+//        network.sendLocation();
+
 //        if (ActivityCompat.checkSelfPermission(getActivity(),
 //                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
 //                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

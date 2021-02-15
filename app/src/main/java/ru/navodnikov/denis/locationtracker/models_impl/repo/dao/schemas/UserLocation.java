@@ -4,21 +4,20 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
+
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "locations")
-public class Locations {
+@Entity(tableName = TrackerDaoImpl.TABLE_NAME)
+public class UserLocation {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId", onDelete = CASCADE)
-    private int userId;
     private double latitude;
     private double longitude;
     private long time;
 
-    public Locations(int id, int userId, double latitude, double longitude, long time) {
+    public UserLocation(int id, double latitude, double longitude, long time) {
         this.id = id;
-        this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = time;
@@ -56,11 +55,4 @@ public class Locations {
         this.time = time;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

@@ -3,31 +3,28 @@ package ru.navodnikov.denis.locationtracker.models.repo.network;
 import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.FirebaseDatabase;
 
 import io.reactivex.rxjava3.core.Single;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.models.location.infra.Result;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 public interface Network {
 
-    String getIdToken();
 
     FirebaseAuth getmAuth();
 
-    FirebaseFirestore getDb();
+    FirebaseDatabase getDb();
 
     Context getContext();
 
-    Single<Object> loginWithEmail(String username, String password);
+    Single<Result<String>> loginWithEmail(String username, String password);
 
     Single<Object> verifyWithPhoneNumber(String userEmail);
 
-    Single<Object> verificationWithSMS(String smsCode);
+    Single<Result<String>> verificationWithSMS(String smsCode);
 
-    void getUserToken(FirebaseUser user);
+    void sendLocation(UserLocation location);
 
-    void startTracking();
-
-    Single<Object> registerWithEmailNumber(String email, String password);
+    Single<Result<String>> registerWithEmail(String email, String password);
 }

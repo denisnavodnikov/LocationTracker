@@ -4,20 +4,21 @@ import android.text.TextUtils;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
 
 public class RegisterViewModel extends MviViewModel<RegisterScreenState> implements RegisterContract.ViewModel {
-    private final TrackerRepo repo;
     private final Network network;
+    private final SharedPref sharedPref;
 
-    public RegisterViewModel(TrackerRepo repo, Network network) {
-        this.repo = repo;
+    public RegisterViewModel(Network network, SharedPref sharedPref) {
         this.network = network;
+        this.sharedPref = sharedPref;
+
     }
 //    TODO добавить методы с логикой работы
 
@@ -44,18 +45,21 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
             return;
         }
 
-        observeTillDestroy(network.registerWithEmailNumber(userEmail, password)
+        observeTillDestroy(network.registerWithEmail(userEmail, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(item -> {
                     postState(RegisterScreenState.createRegisterState());
                 })
-                .doOnSuccess(pair -> {
-                    repo.getDao().saveUser(new User(0, userEmail, network.getIdToken()));
-                    // TODO: move repo to other place
-                })
-                .subscribe(s -> postState(RegisterScreenState.createMoveToTrackingState()),
-                        throwable -> postState(RegisterScreenState.createErrorRegisterState())));
+                .subscribe(result -> {
+                    if (result.isError()) {
+                        postState(RegisterScreenState.createErrorRegisterState(result.getError()));
+                    } else if (result.getValue() != Constants.ID_DEF_VALUE) {
+                        sharedPref.putUserId(result.getValue());
+                        postState(RegisterScreenState.createMoveToTrackingState());
+                    }
+                }));
+
     }
 
 
@@ -68,11 +72,11 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
         observeTillDestroy(network.verifyWithPhoneNumber(userPhone)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(s -> {
+                .doOnSubscribe(result -> {
                     postState(RegisterScreenState.createRegisterState());
                 })
-                .subscribe(s -> postState(RegisterScreenState.createMoveToVerificationState()),
-                        throwable -> postState(RegisterScreenState.createErrorRegisterState())));
+                .subscribe(result -> postState(RegisterScreenState.createMoveToVerificationState()),
+                        throwable -> postState(RegisterScreenState.createErrorRegisterState(throwable))));
 
     }
 

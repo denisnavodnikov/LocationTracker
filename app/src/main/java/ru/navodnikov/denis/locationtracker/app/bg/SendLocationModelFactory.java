@@ -3,8 +3,10 @@ package ru.navodnikov.denis.locationtracker.app.bg;
 import javax.inject.Inject;
 
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 
 
 public class SendLocationModelFactory {
@@ -12,6 +14,10 @@ public class SendLocationModelFactory {
     TrackerRepo repo;
     @Inject
     Network network;
+    @Inject
+    AppLocation appLocation;
+    @Inject
+    SharedPref sharedPref;
 
 
     public SendLocationModelFactory() {
@@ -20,6 +26,6 @@ public class SendLocationModelFactory {
     }
 
     public SendTrackerContract.LocationModel create() {
-        return new SendLocationModel(repo, network);
+        return new SendLocationModel(repo, network, appLocation, sharedPref);
     }
 }

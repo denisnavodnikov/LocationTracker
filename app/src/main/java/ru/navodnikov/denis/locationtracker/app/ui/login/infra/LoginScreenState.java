@@ -15,11 +15,15 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
 
 
     private final int action;
-    private final int error;
+    private Throwable error;
 
     public LoginScreenState(int action) {
         this.action = action;
-        this.error = -1;
+    }
+
+    public LoginScreenState(int action, Throwable error) {
+        this.action = action;
+        this.error = error;
     }
 
     public static LoginScreenState createErrorInputUsernameState() {
@@ -34,8 +38,8 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
         return new LoginScreenState(LOGIN);
     }
 
-    public static LoginScreenState createErrorLoginState() {
-        return new LoginScreenState(ERROR_LOGIN);
+    public static LoginScreenState createErrorLoginState(Throwable error) {
+        return new LoginScreenState(ERROR_LOGIN, error);
     }
 
     public static LoginScreenState createMoveToVerificationState() {
@@ -57,6 +61,9 @@ public class LoginScreenState extends ScreenState<LoginContract.View> {
         } else if (LOGIN == action) {
             loginScreen.showProgress();
         } else if (ERROR_LOGIN == action) {
+            if(error!=null){
+                error.printStackTrace();
+            }
             loginScreen.hideProgress();
             loginScreen.showLoginFailed(R.string.login_failed);
         } else if (TO_VERIFICATION == action) {

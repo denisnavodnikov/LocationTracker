@@ -2,11 +2,9 @@ package ru.navodnikov.denis.locationtracker.app.ui.verification;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.VerificationScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.User;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
 
 public class VerificationViewModel extends MviViewModel<VerificationScreenState> implements VerificationContract.ViewModel {

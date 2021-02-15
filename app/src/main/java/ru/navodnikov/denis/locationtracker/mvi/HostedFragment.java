@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType;
 
 public abstract class HostedFragment<STATE extends ScreenState, VIEW_MODEL extends FragmentContract.ViewModel<STATE>, HOST extends FragmentContract.Host>
         extends NavHostFragment
-        implements FragmentContract.View, Observer<STATE> {
+        implements FragmentContract.View {
     private VIEW_MODEL model;
     private HOST fragmentHost;
 
@@ -37,7 +37,9 @@ public abstract class HostedFragment<STATE extends ScreenState, VIEW_MODEL exten
         setModel(createModel());
         if (getModel() != null) {
             getLifecycle().addObserver(getModel());
-            getModel().getStateObservable().observe(this, this);
+            getModel().getStateObservable().observe(this, state -> {
+                state.visit(this);
+            });
         }
     }
 
@@ -60,11 +62,6 @@ public abstract class HostedFragment<STATE extends ScreenState, VIEW_MODEL exten
         super.onDestroy();
     }
 
-
-    @Override
-    public void onChanged(STATE screenState) {
-        screenState.visit(this);
-    }
 
     protected boolean hasHost() {
         return fragmentHost != null;

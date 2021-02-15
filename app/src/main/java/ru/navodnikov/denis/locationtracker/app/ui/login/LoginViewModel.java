@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
 
@@ -36,9 +37,15 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
                         .doOnSubscribe(item -> {
                             postState(LoginScreenState.createLoginState());
                         })
-                        .subscribe(s -> postState(LoginScreenState.createMoveToTrackingState()),
-                                throwable -> postState(LoginScreenState.createErrorLoginState())));
-   }
+                        .subscribe(result -> {
+                                    if (result.isError()) {
+                                        postState(LoginScreenState.createErrorLoginState(result.getError()));
+                                    } else if (result.getValue() != Constants.ID_DEF_VALUE) {
+                                        postState(LoginScreenState.createMoveToTrackingState());
+                                    }
+                                }
+                        ));
+    }
 
     @Override
     public void loginWithPhone(String userPhone) {
@@ -53,8 +60,8 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
                 .doOnSubscribe(item -> {
                     postState(LoginScreenState.createLoginState());
                 })
-                .subscribe(s -> postState(LoginScreenState.createMoveToVerificationState()),
-                        throwable -> postState(LoginScreenState.createErrorLoginState())));
+                .subscribe(result -> postState(LoginScreenState.createMoveToVerificationState()),
+                        throwable -> postState(LoginScreenState.createErrorLoginState(throwable))));
 
     }
 

@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 import javax.inject.Inject;
 
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
-import ru.navodnikov.denis.locationtracker.models.location.Location;
+import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 
 public class TrackingViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Inject
@@ -17,7 +18,9 @@ public class TrackingViewModelFactory extends ViewModelProvider.NewInstanceFacto
     @Inject
     Network network;
     @Inject
-    Location  location;
+    AppLocation appLocation;
+    @Inject
+    SharedPref sharedPref;
 
     public TrackingViewModelFactory() {
         super();
@@ -28,7 +31,7 @@ public class TrackingViewModelFactory extends ViewModelProvider.NewInstanceFacto
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == TrackingViewModel.class) {
-            return (T) new TrackingViewModel( repo, network, location);
+            return (T) new TrackingViewModel( repo, network, appLocation, sharedPref);
         }
         return null;
     }

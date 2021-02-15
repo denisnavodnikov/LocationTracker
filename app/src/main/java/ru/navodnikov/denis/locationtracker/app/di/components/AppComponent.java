@@ -10,6 +10,7 @@ import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterViewModelFact
 import ru.navodnikov.denis.locationtracker.app.ui.start.StartViewModelFactory;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.TrackingViewModelFactory;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationViewModelFactory;
+import ru.navodnikov.denis.locationtracker.models_impl.sharedpref.TrackerSharedPref;
 
 @Singleton
 @Component(modules = {AppModule.class})
@@ -20,5 +21,7 @@ public interface AppComponent {
     void inject(RegisterViewModelFactory registerViewModelFactory);
     void inject(TrackingViewModelFactory trackingViewModelFactory);
     void inject(SendLocationModelFactory sendLocationModelFactory);
+    void inject(TrackerSharedPref sharedPref);
+
 
 }
