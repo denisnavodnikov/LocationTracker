@@ -9,12 +9,15 @@ import javax.inject.Inject;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
 
 public class VerificationViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Inject
     TrackerRepo repo;
     @Inject
     Network network;
+    @Inject
+    SharedPref sharedPref;
 
     public VerificationViewModelFactory() {
         super();
@@ -25,7 +28,7 @@ public class VerificationViewModelFactory extends ViewModelProvider.NewInstanceF
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == VerificationViewModel.class) {
-            return (T) new VerificationViewModel(repo, network);
+            return (T) new VerificationViewModel(repo, network, sharedPref);
         }
         return null;
     }

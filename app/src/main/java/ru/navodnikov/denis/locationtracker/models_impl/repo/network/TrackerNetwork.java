@@ -48,14 +48,6 @@ public class TrackerNetwork implements Network {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
-                mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("TAG", "onVerificationCompleted:" + credential);
-
-                    } else {
-                        Log.w("log", "createUserWithPhone:failure", task.getException());
-                    }
-                });
             }
 
             @Override
@@ -63,10 +55,10 @@ public class TrackerNetwork implements Network {
                 Log.w("TAG", "onVerificationFailed", e);
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
-                    // ...
+                    getResultVerification(e);
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
-                    // ...
+                    getResultVerification(e);
                 }
                 // Show a message and update the UI
                 // ...
@@ -80,6 +72,16 @@ public class TrackerNetwork implements Network {
                 mResendToken = token;
             }
         };
+    }
+
+    @Override
+    public void getResultVerification(FirebaseUser user) {
+
+    }
+
+    @Override
+    public void getResultVerification(Throwable error) {
+
     }
 
 
@@ -121,7 +123,7 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public Single<Object> verifyWithPhoneNumber(String userPhone) {
+    public Single<Result<String>> verifyWithPhoneNumber(String userPhone) {
         return Single.create(emitter -> {
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(mAuth)
@@ -131,7 +133,7 @@ public class TrackerNetwork implements Network {
                             .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                             .build();
             PhoneAuthProvider.verifyPhoneNumber(options);
-
+            emitter.onSuccess(new Result<>(Constants.ID_DEF_VALUE));
             // TODO: do return result
         });
 
@@ -140,8 +142,14 @@ public class TrackerNetwork implements Network {
 
     @Override
     public Single<Result<String>> verificationWithSMS(String smsCode) {
-        return Single.create(emitter -> {
             credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
+            return signInWithPhoneAuthCredential(credential);
+    }
+
+    @Override
+    public Single<Result<String>> signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        return Single.create(emitter -> {
             mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -153,15 +161,12 @@ public class TrackerNetwork implements Network {
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w("TAG", "signInWithCredential:failure", task.getException());
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            // The verification code entered was invalid
                             emitter.onSuccess(new Result<>(task.getException()));
-                        }
+
                     }
                 }
             });
         });
-
     }
 
 
@@ -170,7 +175,8 @@ public class TrackerNetwork implements Network {
         db.getReference(Constants.DATABASE_PATH)
                 .child(mAuth.getCurrentUser().getUid())
                 .setValue(location).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override public void onSuccess(Void aVoid) {
+            @Override
+            public void onSuccess(Void aVoid) {
                 Log.d("TAG", "upload location: Success");
             }
         });

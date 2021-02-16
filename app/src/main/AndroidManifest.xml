@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".app.fg.ForegroundService"
+            android:name=".app.bg.ForegroundService"
             android:exported="false" />
     </application>
 

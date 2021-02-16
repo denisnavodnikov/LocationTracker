@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.app.fg;
+package ru.navodnikov.denis.locationtracker.app.bg;
 
 
 import android.app.Notification;

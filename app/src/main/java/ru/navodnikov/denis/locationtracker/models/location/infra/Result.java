@@ -2,7 +2,6 @@ package ru.navodnikov.denis.locationtracker.models.location.infra;
 
 import com.google.common.base.Optional;
 
-
 public class Result<T> {
     private final Optional<T> value;
     private final Optional<Throwable> error;

@@ -71,6 +71,10 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
     public void hideProgress() {
         fragmentVerificationBinding.loadingSms.setVisibility(View.GONE);
     }
+    @Override
+    public void showProgress() {
+        fragmentVerificationBinding.loadingSms.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void showVerificationFailed(int errorString) {
