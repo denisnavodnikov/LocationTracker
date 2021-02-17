@@ -37,13 +37,8 @@ public class LoginViewModel extends MviViewModel<LoginScreenState> implements Lo
                         .doOnSubscribe(item -> {
                             postState(LoginScreenState.createLoginState());
                         })
-                        .subscribe(result -> {
-                                    if (result.isError()) {
-                                        postState(LoginScreenState.createErrorLoginState(result.getError()));
-                                    } else if (result.getValue() != Constants.ID_DEF_VALUE) {
-                                        postState(LoginScreenState.createMoveToTrackingState());
-                                    }
-                                }
+                        .subscribe(result -> postState(LoginScreenState.createMoveToTrackingState()),
+                                throwable -> postState(LoginScreenState.createErrorLoginState(throwable))
                         ));
     }
 

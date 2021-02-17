@@ -52,13 +52,11 @@ public class RegisterViewModel extends MviViewModel<RegisterScreenState> impleme
                     postState(RegisterScreenState.createRegisterState());
                 })
                 .subscribe(result -> {
-                    if (result.isError()) {
-                        postState(RegisterScreenState.createErrorRegisterState(result.getError()));
-                    } else if (result.getValue() != Constants.ID_DEF_VALUE) {
-                        sharedPref.putUserId(result.getValue());
-                        postState(RegisterScreenState.createMoveToTrackingState());
-                    }
-                }));
+                            sharedPref.putUserId(result);
+                            postState(RegisterScreenState.createMoveToTrackingState());
+                        },
+                        throwable -> postState(RegisterScreenState.createErrorRegisterState(throwable))
+                ));
 
     }
 

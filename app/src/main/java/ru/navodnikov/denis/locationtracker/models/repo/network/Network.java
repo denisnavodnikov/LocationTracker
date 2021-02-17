@@ -8,7 +8,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.database.FirebaseDatabase;
 
 import io.reactivex.rxjava3.core.Single;
-import ru.navodnikov.denis.locationtracker.models.location.infra.Result;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 public interface Network {
@@ -22,17 +21,15 @@ public interface Network {
 
     FirebaseDatabase getDb();
 
-    Context getContext();
+    Single<String> loginWithEmail(String username, String password);
 
-    Single<Result<String>> loginWithEmail(String username, String password);
+    Single<String> verifyWithPhoneNumber(String userEmail);
 
-    Single<Result<String>> verifyWithPhoneNumber(String userEmail);
+    Single<String> verificationWithSMS(String smsCode);
 
-    Single<Result<String>> verificationWithSMS(String smsCode);
-
-    Single<Result<String>> signInWithPhoneAuthCredential(PhoneAuthCredential credential);
+    Single<String> signInWithPhoneAuthCredential(PhoneAuthCredential credential);
 
     void sendLocation(UserLocation location);
 
-    Single<Result<String>> registerWithEmail(String email, String password);
+    Single<String> registerWithEmail(String email, String password);
 }

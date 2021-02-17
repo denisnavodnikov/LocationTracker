@@ -131,7 +131,7 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.login_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+        if (v.getId() == R.id.register_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
             getModel().registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
         } else {
             getModel().registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),

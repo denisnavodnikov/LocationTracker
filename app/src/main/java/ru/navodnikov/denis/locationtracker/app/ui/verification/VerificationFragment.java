@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,8 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(start==6){
+                if(count==6){
+                    Log.d("TAG", "sms code");
                     getModel().verification(s.toString());
                     fragmentVerificationBinding.loadingSms.setVisibility(View.VISIBLE);
                 }

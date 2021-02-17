@@ -1,6 +1,5 @@
 package ru.navodnikov.denis.locationtracker.models_impl.repo.network;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,27 +23,32 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.models.location.infra.Result;
+import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 
 public class TrackerNetwork implements Network {
+    @Inject
+    ActivityHolder activityHolder;
+
     private final FirebaseAuth mAuth;
     private FirebaseDatabase db;
-    private final Context context;
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthCredential credential;
 
 
-    public TrackerNetwork(Context ctx) {
+    public TrackerNetwork() {
+        TrackerApp.getComponent().inject(this);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        this.context = ctx;
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
@@ -84,7 +88,6 @@ public class TrackerNetwork implements Network {
 
     }
 
-
     @Override
     public FirebaseAuth getmAuth() {
         return mAuth;
@@ -96,23 +99,18 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public Single<Result<String>> loginWithEmail(String username, String password) {
+    public Single<String> loginWithEmail(String username, String password) {
         return Single.create(emitter -> mAuth.signInWithEmailAndPassword(username, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("log", "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                emitter.onSuccess(new Result<>(user.getUid()));
+                                emitter.onSuccess(user.getUid());
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("log", "signInWithEmail:failure", task.getException());
-                                emitter.onSuccess(new Result<>(task.getException()));
+                                emitter.onError(task.getException());
                             }
 
                         })
@@ -123,32 +121,29 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public Single<Result<String>> verifyWithPhoneNumber(String userPhone) {
+    public Single<String> verifyWithPhoneNumber(String userPhone) {
         return Single.create(emitter -> {
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(mAuth)
                             .setPhoneNumber(userPhone)       // Phone number to verify
                             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                            .setActivity((Activity) context)                 // Activity (for callback binding)
+                            .setActivity(activityHolder.getActivity())                 // Activity (for callback binding)
                             .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                             .build();
             PhoneAuthProvider.verifyPhoneNumber(options);
-            emitter.onSuccess(new Result<>(Constants.ID_DEF_VALUE));
+            emitter.onSuccess(Constants.ID_DEF_VALUE);
             // TODO: do return result
         });
-
-
     }
 
     @Override
-    public Single<Result<String>> verificationWithSMS(String smsCode) {
+    public Single<String> verificationWithSMS(String smsCode) {
             credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
             return signInWithPhoneAuthCredential(credential);
     }
 
     @Override
-    public Single<Result<String>> signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-
+    public Single<String> signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         return Single.create(emitter -> {
             mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -157,11 +152,11 @@ public class TrackerNetwork implements Network {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("TAG", "signInWithCredential:success");
                         FirebaseUser user = task.getResult().getUser();
-                        emitter.onSuccess(new Result<>(user.getUid()));
+                        emitter.onSuccess(user.getUid());
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            emitter.onSuccess(new Result<>(task.getException()));
+                            emitter.onError(task.getException());
 
                     }
                 }
@@ -185,7 +180,7 @@ public class TrackerNetwork implements Network {
     }
 
     @Override
-    public Single<Result<String>> registerWithEmail(String email, String password) {
+    public Single<String> registerWithEmail(String email, String password) {
         return Single.create(emitter -> mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -194,19 +189,15 @@ public class TrackerNetwork implements Network {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            emitter.onSuccess(new Result<>(user.getUid()));
+                            emitter.onSuccess(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(context, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            emitter.onSuccess(new Result<>(task.getException()));
+                            emitter.onError(task.getException());
                         }
-
                         // ...
                     }
                 }));
-
     }
 
 

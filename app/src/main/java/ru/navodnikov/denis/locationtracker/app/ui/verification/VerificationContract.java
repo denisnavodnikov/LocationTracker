@@ -16,6 +16,8 @@ public class VerificationContract {
         void showVerificationFailed(int verification_failed);
 
         void proceedFromVerificationToTrackingScreen();
+
+        void showProgress();
     }
 
     public interface Host extends FragmentContract.Host {

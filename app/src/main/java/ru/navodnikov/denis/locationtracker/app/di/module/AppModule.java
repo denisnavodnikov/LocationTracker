@@ -6,11 +6,13 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
 import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerDao;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
 import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
 import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
+import ru.navodnikov.denis.locationtracker.models_impl.ActivityHolderImp;
 import ru.navodnikov.denis.locationtracker.models_impl.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
@@ -24,7 +26,6 @@ public class AppModule {
     public AppModule(Context app) {
         this.app = app;
     }
-
 
     @Provides
     @Singleton
@@ -44,13 +45,6 @@ public class AppModule {
         return new TrackerRepository(getTrackerDao());
     }
 
-
-    @Provides
-    @Singleton
-    public Network getTrackerNetwork() {
-        return new TrackerNetwork(app);
-    }
-
     @Provides
     @Singleton
     public AppLocation getTrackerLocation() {
@@ -61,5 +55,16 @@ public class AppModule {
     @Singleton
     public SharedPref getTrackerSharedPref(){
         return new TrackerSharedPref(app);
+    }
+    @Provides
+    @Singleton
+    public ActivityHolder getActivityHolderImp(){
+        return new ActivityHolderImp();
+    }
+
+    @Provides
+    @Singleton
+    public Network getTrackerNetwork() {
+        return new TrackerNetwork();
     }
 }

@@ -33,14 +33,11 @@ public class VerificationViewModel extends MviViewModel<VerificationScreenState>
                     postState(VerificationScreenState.createVerificationState());
                 })
                 .subscribe(result -> {
-                    if (result.isError()) {
-                        postState(VerificationScreenState.createErrorVerificationState());
-                    } else if (result.getValue() != Constants.ID_DEF_VALUE) {
-                        sharedPref.putUserId(result.getValue());
-                        postState(VerificationScreenState.createMoveToTrackingState());
-                    }
-
-                }));
+                            sharedPref.putUserId(result);
+                            postState(VerificationScreenState.createMoveToTrackingState());
+                        },
+                        throwable -> postState(VerificationScreenState.createErrorVerificationState())
+                ));
     }
 
 
