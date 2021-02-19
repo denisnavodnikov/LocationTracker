@@ -1,9 +1,11 @@
 package ru.navodnikov.denis.locationtracker.models.location;
 
-import android.location.Location;
-
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Observable;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 public interface AppLocation {
-    Single<Location> getLocation();
+    Observable<UserLocation> getLocation();
+
+    void createLocationRequest();
+
 }

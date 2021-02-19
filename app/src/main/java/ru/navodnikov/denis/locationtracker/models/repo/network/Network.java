@@ -13,10 +13,6 @@ import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLoca
 public interface Network {
 
 
-    void getResultVerification(FirebaseUser user);
-
-    void getResultVerification(Throwable error);
-
     FirebaseAuth getmAuth();
 
     FirebaseDatabase getDb();

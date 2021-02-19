@@ -17,9 +17,16 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
 
 public class ForegroundService extends Service {
+    private SendTrackerContract.LocationModel model;
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String TITLE = "Location Tracker";
     public static final String MASSAGE = "Отправка местоположения";
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        model = new SendLocationModelFactory().create();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -35,8 +42,8 @@ public class ForegroundService extends Service {
                 .build();
 
         startForeground(1, notification);
-
-        return START_REDELIVER_INTENT;
+        model.sendLocationStart();
+        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -56,4 +63,5 @@ public class ForegroundService extends Service {
             manager.createNotificationChannel(serviceChannel);
         }
     }
+
 }

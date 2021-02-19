@@ -4,6 +4,8 @@ public class SendTrackerContract {
     public interface LocationModel {
 
         void sendLocationStart();
+
+        void sendLocationStop();
     }
 
 }

@@ -5,6 +5,8 @@ import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
 
 public class TrackingContract {
     public interface ViewModel extends FragmentContract.ViewModel<TrackingScreenState> {
+        void setPermissionChecked(boolean permissionChecked);
+
         void logOut();
 
         void startTracking();

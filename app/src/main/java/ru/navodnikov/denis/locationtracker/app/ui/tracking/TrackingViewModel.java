@@ -14,6 +14,7 @@ public class TrackingViewModel extends MviViewModel<TrackingScreenState> impleme
     private final Network network;
     private final AppLocation appLocation;
     private final SharedPref sharedPref;
+    private boolean isPermissionChecked;
 
     public TrackingViewModel(TrackerRepo repo, Network network, AppLocation appLocation, SharedPref sharedPref) {
         this.repo = repo;
@@ -21,7 +22,11 @@ public class TrackingViewModel extends MviViewModel<TrackingScreenState> impleme
         this.appLocation = appLocation;
         this.sharedPref = sharedPref;
     }
-//    TODO добавить методы с логикой работы
+
+    @Override
+    public void setPermissionChecked(boolean permissionChecked) {
+        isPermissionChecked = permissionChecked;
+    }
 
     @Override
     public void logOut() {
@@ -31,7 +36,13 @@ public class TrackingViewModel extends MviViewModel<TrackingScreenState> impleme
 
     @Override
     public void startTracking() {
-        postState(TrackingScreenState.createStartTrackingState());
+        if(isPermissionChecked){
+            postState(TrackingScreenState.createStartTrackingState());
+        }else{
+            postState(TrackingScreenState.createCheckPermissionState());
+        }
+
+
 //        appLocation.getLocation();
 //        repo.getDao().saveLocation();
 //        network.sendLocation();

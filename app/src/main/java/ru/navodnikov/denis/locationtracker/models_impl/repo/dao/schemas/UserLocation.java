@@ -1,17 +1,14 @@
 package ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
 
-import static androidx.room.ForeignKey.CASCADE;
-
 @Entity(tableName = TrackerDaoImpl.TABLE_NAME)
 public class UserLocation {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private double latitude;
     private double longitude;
     private long time;
@@ -39,11 +36,11 @@ public class UserLocation {
         this.longitude = longitude;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

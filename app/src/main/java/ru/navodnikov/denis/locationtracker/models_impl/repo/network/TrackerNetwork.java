@@ -1,8 +1,7 @@
 package ru.navodnikov.denis.locationtracker.models_impl.repo.network;
 
-import android.content.Context;
+
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -59,10 +58,8 @@ public class TrackerNetwork implements Network {
                 Log.w("TAG", "onVerificationFailed", e);
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
-                    getResultVerification(e);
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
-                    getResultVerification(e);
                 }
                 // Show a message and update the UI
                 // ...
@@ -78,15 +75,6 @@ public class TrackerNetwork implements Network {
         };
     }
 
-    @Override
-    public void getResultVerification(FirebaseUser user) {
-
-    }
-
-    @Override
-    public void getResultVerification(Throwable error) {
-
-    }
 
     @Override
     public FirebaseAuth getmAuth() {
