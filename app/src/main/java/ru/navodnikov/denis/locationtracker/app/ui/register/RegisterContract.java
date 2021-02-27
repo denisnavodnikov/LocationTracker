@@ -3,7 +3,7 @@ package ru.navodnikov.denis.locationtracker.app.ui.register;
 import androidx.annotation.StringRes;
 
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
-import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
+import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
 
 public class RegisterContract {
     public interface ViewModel extends FragmentContract.ViewModel<RegisterScreenState> {
@@ -31,9 +31,5 @@ public class RegisterContract {
 
     }
 
-    public interface Host extends FragmentContract.Host {
-
-        void showError(int error);
-    }
 
 }

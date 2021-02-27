@@ -1,7 +1,7 @@
 package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
-import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
+import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
 
 public class TrackingContract {
     public interface ViewModel extends FragmentContract.ViewModel<TrackingScreenState> {
@@ -24,11 +24,6 @@ public class TrackingContract {
         void startService();
 
         void stopService();
-    }
-
-    public interface Host extends FragmentContract.Host {
-
-        void showError(int error);
     }
 
 }

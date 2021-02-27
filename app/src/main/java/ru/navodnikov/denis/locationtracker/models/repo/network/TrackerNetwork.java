@@ -10,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import io.reactivex.rxjava3.core.Single;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
-public interface Network {
+public interface TrackerNetwork {
 
 
     FirebaseAuth getmAuth();

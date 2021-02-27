@@ -8,17 +8,15 @@ import androidx.work.WorkerParameters;
 
 public class SendWorker extends Worker {
 
-    private final SendTrackerContract.LocationModel model;
 
     public SendWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        model = new SendLocationModelFactory().create();
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        model.sendLocationStart();
+//        TODO: work here
         return Result.success();
     }
 }

@@ -1,39 +1,47 @@
 package ru.navodnikov.denis.locationtracker.app.ui.verification;
 
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.VerificationScreenState;
-import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
-import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
-import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
-import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
+import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
+import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
 
-public class VerificationViewModel extends MviViewModel<VerificationScreenState> implements VerificationContract.ViewModel {
+public class VerificationViewModel extends ViewModel implements FragmentContract.ViewModel<VerificationScreenState> {
 
-    private final TrackerRepo repo;
-    private final Network network;
-    private final SharedPref sharedPref;
+    private final TrackerRepository repo;
+    private final TrackerNetwork trackerNetwork;
+    private final UserStorage userStorage;
+    private final MutableLiveData<VerificationScreenState> stateHolder = new MutableLiveData<>();
+    private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
 
-    public VerificationViewModel(TrackerRepo repo, Network network, SharedPref sharedPref) {
+    @Inject
+    public VerificationViewModel(TrackerRepository repo, TrackerNetwork trackerNetwork, UserStorage userStorage) {
         this.repo = repo;
-        this.network = network;
-        this.sharedPref = sharedPref;
+        this.trackerNetwork = trackerNetwork;
+        this.userStorage = userStorage;
     }
 
 
-    @Override
+
     public void verification(String smsCode) {
 
-        observeTillDestroy(network.verificationWithSMS(smsCode)
+        observeTillDestroy(trackerNetwork.verificationWithSMS(smsCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(item -> {
                     postState(VerificationScreenState.createVerificationState());
                 })
                 .subscribe(result -> {
-                            sharedPref.putUserId(result);
+                            userStorage.putUserId(result);
                             postState(VerificationScreenState.createMoveToTrackingState());
                         },
                         throwable -> postState(VerificationScreenState.createErrorVerificationState())
@@ -41,4 +49,16 @@ public class VerificationViewModel extends MviViewModel<VerificationScreenState>
     }
 
 
+    @Override
+    public MutableLiveData<VerificationScreenState> getStateObservable() {
+        return stateHolder;
+    }
+
+    @Override
+    public void postState(VerificationScreenState state) {
+        stateHolder.postValue(state);
+    }
+    protected void observeTillDestroy(Disposable... subscriptions) {
+        onDestroyDisposables.addAll(subscriptions);
+    }
 }

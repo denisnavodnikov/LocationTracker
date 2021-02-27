@@ -12,5 +12,7 @@ public class Constants {
     public static final String NAME_OF_FDB = "Locations";
     public static final int BUTTON_LOGIN = 0;
     public static final int BUTTON_REGISTER = 1;
+    public static final String TABLE_NAME = "locations";
+    public static final String DB_NAME = "tracker.db";
 
 }

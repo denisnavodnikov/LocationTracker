@@ -1,20 +1,27 @@
 package ru.navodnikov.denis.locationtracker.app.ui.tracking.infra;
 
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.TrackingContract;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
 
 public class TrackingScreenState extends ScreenState<TrackingContract.View> {
-
-    private static final int ERROR = 1;
-    private static final int START_TRACKING = 2;
-    private static final int STOP_TRACKING = 3;
-    private static final int LOGOUT = 4;
-    private static final int CHECK_PERMISSION = 5;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({ERROR, START_TRACKING, STOP_TRACKING,LOGOUT, CHECK_PERMISSION})
+    private  @interface ItemTypeDef {}
+    private static final int ERROR = 0;
+    private static final int START_TRACKING = 1;
+    private static final int STOP_TRACKING = 2;
+    private static final int LOGOUT = 3;
+    private static final int CHECK_PERMISSION = 4;
 
     private final int action;
 
-    public TrackingScreenState(int action) {
+    public TrackingScreenState(@ItemTypeDef int action) {
         this.action = action;
     }
 

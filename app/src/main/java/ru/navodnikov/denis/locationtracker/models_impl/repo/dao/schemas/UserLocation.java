@@ -1,20 +1,28 @@
 package ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDaoImpl;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 
-@Entity(tableName = TrackerDaoImpl.TABLE_NAME)
+@Entity(tableName = Constants.TABLE_NAME)
 public class UserLocation {
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private int id;
     private double latitude;
     private double longitude;
     private long time;
 
     public UserLocation(int id, double latitude, double longitude, long time) {
         this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.time = time;
+    }
+
+    @Ignore
+    public UserLocation(double latitude, double longitude, long time) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = time;
@@ -36,11 +44,11 @@ public class UserLocation {
         this.longitude = longitude;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

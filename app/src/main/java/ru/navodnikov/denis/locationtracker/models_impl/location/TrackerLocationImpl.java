@@ -3,11 +3,8 @@ package ru.navodnikov.denis.locationtracker.models_impl.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.location.Location;
 import android.os.Looper;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -15,25 +12,23 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 
-import java.util.Date;
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
-import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
+import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
-public class TrackerLocation implements AppLocation {
+public class TrackerLocationImpl implements TrackerLocation {
     private final FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
 
     private final Context context;
     private long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
 
-    public TrackerLocation(Context context) {
+    @Inject
+    public TrackerLocationImpl(Context context) {
         this.context = context;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
     }
@@ -46,7 +41,7 @@ public class TrackerLocation implements AppLocation {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         super.onLocationResult(locationResult);
-                        UserLocation location = new UserLocation(0,
+                        UserLocation location = new UserLocation(
                                 locationResult.getLastLocation().getLatitude(),
                                 locationResult.getLastLocation().getLongitude(),
                                 System.currentTimeMillis());

@@ -1,40 +1,46 @@
 package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import javax.inject.Inject;
 
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
-import ru.navodnikov.denis.locationtracker.models.location.AppLocation;
-import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepo;
-import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
-import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
-import ru.navodnikov.denis.locationtracker.mvi.MviViewModel;
+import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
+import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
+import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
 
 
-public class TrackingViewModel extends MviViewModel<TrackingScreenState> implements TrackingContract.ViewModel{
-    private final TrackerRepo repo;
-    private final Network network;
-    private final AppLocation appLocation;
-    private final SharedPref sharedPref;
+public class TrackingViewModel extends ViewModel implements FragmentContract.ViewModel<TrackingScreenState> {
+    private final TrackerRepository repo;
+    private final TrackerNetwork trackerNetwork;
+    private final TrackerLocation trackerLocation;
+    private final UserStorage userStorage;
     private boolean isPermissionChecked;
+    private final MutableLiveData<TrackingScreenState> stateHolder = new MutableLiveData<>();
 
-    public TrackingViewModel(TrackerRepo repo, Network network, AppLocation appLocation, SharedPref sharedPref) {
+    @Inject
+    public TrackingViewModel(TrackerRepository repo, TrackerNetwork trackerNetwork, TrackerLocation trackerLocation, UserStorage userStorage) {
         this.repo = repo;
-        this.network = network;
-        this.appLocation = appLocation;
-        this.sharedPref = sharedPref;
+        this.trackerNetwork = trackerNetwork;
+        this.trackerLocation = trackerLocation;
+        this.userStorage = userStorage;
     }
 
-    @Override
+
     public void setPermissionChecked(boolean permissionChecked) {
         isPermissionChecked = permissionChecked;
     }
 
-    @Override
+
     public void logOut() {
-        network.getmAuth().signOut();
+        trackerNetwork.getmAuth().signOut();
         postState(TrackingScreenState.createLogoutState());
     }
 
-    @Override
+
     public void startTracking() {
         if(isPermissionChecked){
             postState(TrackingScreenState.createStartTrackingState());
@@ -48,10 +54,19 @@ public class TrackingViewModel extends MviViewModel<TrackingScreenState> impleme
 //        network.sendLocation();
 
     }
-    @Override
+
     public void stopTracking() {
         postState(TrackingScreenState.createStopTrackingState());
     }
 
 
+    @Override
+    public MutableLiveData<TrackingScreenState> getStateObservable() {
+        return stateHolder;
+    }
+
+    @Override
+    public void postState(TrackingScreenState state) {
+        stateHolder.postValue(state);
+    }
 }

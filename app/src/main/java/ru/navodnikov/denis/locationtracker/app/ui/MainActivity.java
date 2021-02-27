@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerAppCompatActivity;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.ui.login.LoginContract;
@@ -19,7 +20,7 @@ import ru.navodnikov.denis.locationtracker.app.ui.tracking.TrackingContract;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationContract;
 import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
 
-public class MainActivity extends AppCompatActivity implements LoginContract.Host, RegisterContract.Host, StartContract.Host, TrackingContract.Host, VerificationContract.Host {
+public class MainActivity extends DaggerAppCompatActivity {
 
     @Inject
     ActivityHolder activityHolder;
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements LoginContract.Hos
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         coordinator = findViewById(R.id.coordinator);
-        TrackerApp.getComponent().inject(this);
         activityHolder.setActivity(this);
 
     }
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements LoginContract.Hos
 
     }
 
-    @Override
     public void showError(int error) {
         Snackbar snackbar = Snackbar.make(
                 coordinator,

@@ -1,7 +1,7 @@
 package ru.navodnikov.denis.locationtracker.app.ui.verification;
 
 import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.VerificationScreenState;
-import ru.navodnikov.denis.locationtracker.mvi.FragmentContract;
+import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
 
 public class VerificationContract {
     public interface ViewModel extends FragmentContract.ViewModel<VerificationScreenState> {
@@ -18,12 +18,6 @@ public class VerificationContract {
         void proceedFromVerificationToTrackingScreen();
 
         void showProgress();
-    }
-
-    public interface Host extends FragmentContract.Host {
-
-
-        void showError(int error);
     }
 
 

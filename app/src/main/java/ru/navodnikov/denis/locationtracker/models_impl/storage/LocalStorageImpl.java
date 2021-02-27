@@ -1,20 +1,17 @@
-package ru.navodnikov.denis.locationtracker.models_impl.sharedpref;
+package ru.navodnikov.denis.locationtracker.models_impl.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import javax.inject.Inject;
-
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.models.sharedpref.SharedPref;
+import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
 
-public class TrackerSharedPref implements SharedPref {
+public class LocalStorageImpl implements UserStorage {
 
     private final SharedPreferences sharedPreferences;
 
-    public TrackerSharedPref(Context context) {
+    public LocalStorageImpl(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 

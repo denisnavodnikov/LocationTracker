@@ -1,15 +1,22 @@
 package ru.navodnikov.denis.locationtracker.app.ui.register.infra;
 
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterContract;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
 
 public class RegisterScreenState extends ScreenState<RegisterContract.View> {
-
-    public static final int EMPTY_USER_EMAIL_OR_PHONE = 0;
-    public static final int EMPTY_PASSWORD = 1;
-    public static final int SHORT_PASSWORD = 2;
-    public static final int NOT_USER_EMAIL = 3;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({EMPTY_USER_EMAIL_OR_PHONE, EMPTY_PASSWORD, SHORT_PASSWORD,NOT_USER_EMAIL, REGISTER, ERROR_REGISTER, TO_VERIFICATION, TO_TRACKING})
+    private  @interface ItemTypeDef {}
+    private static final int EMPTY_USER_EMAIL_OR_PHONE = 0;
+    private static final int EMPTY_PASSWORD = 1;
+    private static final int SHORT_PASSWORD = 2;
+    private static final int NOT_USER_EMAIL = 3;
     private static final int REGISTER = 4;
     private static final int ERROR_REGISTER = 5;
     private static final int TO_VERIFICATION = 6;
@@ -19,7 +26,7 @@ public class RegisterScreenState extends ScreenState<RegisterContract.View> {
     private final int action;
     private Throwable error;
 
-    public RegisterScreenState(int action) {
+    public RegisterScreenState(@ItemTypeDef int action) {
         this.action = action;
     }
 

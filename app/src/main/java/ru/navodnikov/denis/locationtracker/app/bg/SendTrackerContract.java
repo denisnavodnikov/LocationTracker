@@ -1,7 +1,7 @@
 package ru.navodnikov.denis.locationtracker.app.bg;
 
 public class SendTrackerContract {
-    public interface LocationModel {
+    public interface LocationSender {
 
         void sendLocationStart();
 

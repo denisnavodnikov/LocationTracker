@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -15,16 +15,23 @@ import android.view.ViewGroup;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
-import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
 
 
-public class StartFragment extends HostedFragment<StartScreenState, StartContract.ViewModel, StartContract.Host> implements StartContract.View, View.OnClickListener {
+public class StartFragment extends BaseFragment<StartScreenState, StartViewModel> implements StartContract.View {
+
 
     private FragmentStartBinding fragmentStartBinding;
     private NavController navController;
 
 
     public StartFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model.getStateObservable().observe(this,this);
     }
 
     @Override
@@ -35,8 +42,8 @@ public class StartFragment extends HostedFragment<StartScreenState, StartContrac
 
 
     @Override
-    protected StartContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new StartViewModelFactory()).get(StartViewModel.class);
+    public Class<StartViewModel> getViewModel() {
+        return StartViewModel.class;
     }
 
 
@@ -51,8 +58,8 @@ public class StartFragment extends HostedFragment<StartScreenState, StartContrac
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentStartBinding.startLogin.setOnClickListener(this);
-        fragmentStartBinding.startRegister.setOnClickListener(this);
+        fragmentStartBinding.startLogin.setOnClickListener(v -> getModel().onItemClicked(R.id.start_login));
+        fragmentStartBinding.startRegister.setOnClickListener(v -> getModel().onItemClicked(R.id.start_register));
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
@@ -62,16 +69,6 @@ public class StartFragment extends HostedFragment<StartScreenState, StartContrac
         fragmentStartBinding = null;
     }
 
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.start_login) {
-            getModel().onItemClicked(R.id.start_login);
-        }
-        if (v.getId() == R.id.start_register) {
-            getModel().onItemClicked(R.id.start_register);
-        }
-    }
 
     @Override
     public void proceedToRegisterScreen() {

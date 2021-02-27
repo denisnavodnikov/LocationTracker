@@ -2,12 +2,9 @@ package ru.navodnikov.denis.locationtracker.app.ui.tracking;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,30 +13,31 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.bg.ForegroundService;
-import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
-import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
 
 
-public class TrackingFragment extends HostedFragment<TrackingScreenState, TrackingContract.ViewModel, TrackingContract.Host> implements TrackingContract.View, View.OnClickListener {
+public class TrackingFragment extends BaseFragment<TrackingScreenState, TrackingViewModel> implements TrackingContract.View {
+
 
     private FragmentTrackingBinding fragmentTrackingBinding;
     private NavController navController;
 
     public TrackingFragment() {
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model.getStateObservable().observe(this,this);
     }
 
     @Nullable
@@ -55,17 +53,16 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
     }
 
     @Override
-    protected TrackingContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new TrackingViewModelFactory()).get(TrackingViewModel.class);
+    public Class<TrackingViewModel> getViewModel() {
+        return TrackingViewModel.class;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentTrackingBinding.buttonLogOut.setOnClickListener(this);
-        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(this);
-        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(this);
+        fragmentTrackingBinding.buttonLogOut.setOnClickListener(v -> getModel().logOut());
+        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(v -> getModel().startTracking());
+        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> getModel().stopTracking());
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
@@ -79,9 +76,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
 
     @Override
     public void showError(int error) {
-        if (hasHost()) {
-            getFragmentHost().showError(error);
-        }
+        showError(error);
     }
 
     @Override
@@ -91,21 +86,9 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
 
     @Override
     public void proceedToStartScreen() {
-        FirebaseAuth.getInstance().signOut();
         navController.navigate(R.id.action_trackingFragment_to_startFragment);
     }
 
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button_log_out) {
-            getModel().logOut();
-        } else if (v.getId() == R.id.button_start_tracking) {
-            getModel().startTracking();
-        } else if (v.getId() == R.id.button_stop_tracking) {
-            getModel().stopTracking();
-        }
-    }
 
     @Override
     public void permissionRequest() {
@@ -119,6 +102,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
 
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -133,7 +117,7 @@ public class TrackingFragment extends HostedFragment<TrackingScreenState, Tracki
                 getModel().setPermissionChecked(true);
             } else {
                 // Permission denied.
-                getFragmentHost().showError(R.string.permissions_denied);
+                showError(R.string.permissions_denied);
             }
         }
     }

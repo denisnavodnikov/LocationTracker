@@ -4,10 +4,8 @@ package ru.navodnikov.denis.locationtracker.app.ui.login;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -20,12 +18,13 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentLoginBinding;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
-public class LoginFragment extends HostedFragment<LoginScreenState, LoginContract.ViewModel, LoginContract.Host> implements LoginContract.View, View.OnClickListener {
+public class LoginFragment extends BaseFragment<LoginScreenState, LoginViewModel> implements LoginContract.View {
+
     private FragmentLoginBinding fragmentLoginBinding;
     private NavController navController;
 
@@ -35,14 +34,8 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        model.getStateObservable().observe(this,this);
     }
-
-    @Override
-    protected LoginContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
-    }
-
 
     @Nullable
     @Override
@@ -76,16 +69,24 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        fragmentLoginBinding.loginButton.setOnClickListener(this);
+        fragmentLoginBinding.loginButton.setOnClickListener(v -> {
+            if (fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+                getModel().loginWithPhone(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin));
+            } else {
+                getModel().loginWithEmail(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin),
+                        getTextFromView(fragmentLoginBinding.passwordForLogin));
+            }
+        });
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
-
+    @Override
+    public Class<LoginViewModel> getViewModel() {
+        return LoginViewModel.class;
+    }
 
     @Override
     public void showLoginFailed(@StringRes Integer errorString) {
-        if (hasHost()) {
-            getFragmentHost().showError(errorString);
-        }
+        showError(errorString);
     }
 
 
@@ -126,13 +127,4 @@ public class LoginFragment extends HostedFragment<LoginScreenState, LoginContrac
         fragmentLoginBinding = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.login_button && fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
-            getModel().loginWithPhone(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin));
-        } else {
-            getModel().loginWithEmail(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin),
-                    getTextFromView(fragmentLoginBinding.passwordForLogin));
-        }
-    }
 }

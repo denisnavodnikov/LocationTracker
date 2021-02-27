@@ -1,31 +1,38 @@
 package ru.navodnikov.denis.locationtracker.app.di.components;
 
+import android.app.Application;
+
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
-import ru.navodnikov.denis.locationtracker.app.bg.SendLocationModelFactory;
+import dagger.android.AndroidInjectionModule;
+import dagger.android.AndroidInjector;
+import ru.navodnikov.denis.locationtracker.app.TrackerApp;
+import ru.navodnikov.denis.locationtracker.app.di.builders.ActivityBuildersModule;
+import ru.navodnikov.denis.locationtracker.app.di.builders.FragmentBuildersModule;
 import ru.navodnikov.denis.locationtracker.app.di.module.AppModule;
-import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
-import ru.navodnikov.denis.locationtracker.app.ui.login.LoginViewModelFactory;
-import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterViewModelFactory;
-import ru.navodnikov.denis.locationtracker.app.ui.start.StartViewModelFactory;
-import ru.navodnikov.denis.locationtracker.app.ui.tracking.TrackingViewModelFactory;
-import ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationViewModelFactory;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models_impl.sharedpref.TrackerSharedPref;
+import ru.navodnikov.denis.locationtracker.app.di.builders.ViewModelBuilderModule;
+import ru.navodnikov.denis.locationtracker.app.di.module.ViewModelFactoryModule;
 
 @Singleton
-@Component(modules = {AppModule.class})
-public interface AppComponent {
-    void inject(StartViewModelFactory startViewModelFactory);
-    void inject(VerificationViewModelFactory verificationViewModelFactory);
-    void inject(LoginViewModelFactory loginViewModelFactory);
-    void inject(RegisterViewModelFactory registerViewModelFactory);
-    void inject(TrackingViewModelFactory trackingViewModelFactory);
-    void inject(SendLocationModelFactory sendLocationModelFactory);
-    void inject(TrackerSharedPref sharedPref);
-    void inject(MainActivity mainActivity);
-    void inject(TrackerNetwork trackerNetwork);
+@Component(modules = {
+        AndroidInjectionModule.class,
+        ActivityBuildersModule.class,
+        AppModule.class,
+        ViewModelFactoryModule.class
+})
+public interface AppComponent extends AndroidInjector<TrackerApp> {
+
+    @Component.Builder
+    interface Builder {
+        AppComponent build();
+
+        @BindsInstance
+        Builder application(Application application);
+    }
+
+
 
 
 }

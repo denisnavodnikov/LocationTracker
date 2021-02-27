@@ -4,10 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,13 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import ru.navodnikov.denis.locationtracker.R;
+import ru.navodnikov.denis.locationtracker.app.ui.ViewModelProviderFactory;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.VerificationScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentVerificationBinding;
-import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
 
 
-public class VerificationFragment extends HostedFragment<VerificationScreenState, VerificationContract.ViewModel, VerificationContract.Host> implements VerificationContract.View {
+public class VerificationFragment extends BaseFragment<VerificationScreenState, VerificationViewModel> implements VerificationContract.View {
+
 
     private FragmentVerificationBinding fragmentVerificationBinding;
     private NavController navController;
@@ -32,8 +34,14 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
     }
 
     @Override
-    protected VerificationContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new VerificationViewModelFactory()).get(VerificationViewModel.class);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model.getStateObservable().observe(this,this);
+    }
+
+    @Override
+    public Class<VerificationViewModel> getViewModel() {
+        return VerificationViewModel.class;
     }
 
     @Override
@@ -54,7 +62,7 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count==6){
+                if (count == 6) {
                     Log.d("TAG", "sms code");
                     getModel().verification(s.toString());
                     fragmentVerificationBinding.loadingSms.setVisibility(View.VISIBLE);
@@ -73,6 +81,7 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
     public void hideProgress() {
         fragmentVerificationBinding.loadingSms.setVisibility(View.GONE);
     }
+
     @Override
     public void showProgress() {
         fragmentVerificationBinding.loadingSms.setVisibility(View.VISIBLE);
@@ -80,9 +89,7 @@ public class VerificationFragment extends HostedFragment<VerificationScreenState
 
     @Override
     public void showVerificationFailed(int errorString) {
-        if (hasHost()) {
-            getFragmentHost().showError(errorString);
-        }
+        showError(errorString);
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -13,20 +12,21 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import javax.inject.Inject;
+
+import dagger.android.DaggerService;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
 
-public class ForegroundService extends Service {
-    private SendTrackerContract.LocationModel model;
+public class ForegroundService extends DaggerService {
+    
+    @Inject
+    SendTrackerContract.LocationSender model;
+
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String TITLE = "Location Tracker";
     public static final String MASSAGE = "Отправка местоположения";
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        model = new SendLocationModelFactory().create();
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

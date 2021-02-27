@@ -1,16 +1,24 @@
 package ru.navodnikov.denis.locationtracker.app.ui.start.infra;
 
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import ru.navodnikov.denis.locationtracker.app.ui.start.StartContract;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
 
 public class StartScreenState extends ScreenState<StartContract.View> {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({TO_LOGIN, TO_REGISTRATION, TO_TRACKING})
+    private  @interface ItemTypeDef {}
     private static final int TO_LOGIN = 0;
     private static final int TO_REGISTRATION = 1;
     private static final int TO_TRACKING = 2;
 
     private final int action;
 
-    public StartScreenState(int action) {
+    public StartScreenState(@ItemTypeDef int action) {
         this.action = action;
     }
 

@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.mvi;
+package ru.navodnikov.denis.locationtracker.viewmodel;
 
 public abstract class ScreenState<T extends FragmentContract.View> {
 

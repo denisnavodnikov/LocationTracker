@@ -1,18 +1,26 @@
 package ru.navodnikov.denis.locationtracker.app.ui.verification.infra;
 
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.verification.VerificationContract;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
 
 public class VerificationScreenState extends ScreenState<VerificationContract.View> {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({ERROR_VERIFICATION, VERIFICATION, TO_TRACKING})
+    private  @interface ItemTypeDef {}
+    private static final int ERROR_VERIFICATION = 0;
+    private static final int VERIFICATION = 1;
+    private static final int TO_TRACKING = 2;
 
-    public static final int ERROR_VERIFICATION = 0;
-    public static final int VERIFICATION = 1;
-    public static final int TO_TRACKING = 2;
 
     private final int action;
 
-    public VerificationScreenState(int action) {
+    public VerificationScreenState(@ItemTypeDef int action) {
         this.action = action;
     }
 

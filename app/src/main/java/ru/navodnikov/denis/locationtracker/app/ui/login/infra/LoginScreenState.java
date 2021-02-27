@@ -1,23 +1,30 @@
 package ru.navodnikov.denis.locationtracker.app.ui.login.infra;
 
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.login.LoginContract;
-import ru.navodnikov.denis.locationtracker.mvi.ScreenState;
+import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
 
 public class LoginScreenState extends ScreenState<LoginContract.View> {
-
-    private static final int USERNAME = 1;
-    private static final int PASSWORD = 2;
-    private static final int LOGIN = 3;
-    private static final int ERROR_LOGIN = 4;
-    private static final int TO_VERIFICATION = 5;
-    private static final int TO_TRACKING = 6;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({USERNAME, PASSWORD, LOGIN, ERROR_LOGIN, TO_VERIFICATION, TO_TRACKING})
+    private  @interface ItemTypeDef {}
+    private static final int USERNAME = 0;
+    private static final int PASSWORD = 1;
+    private static final int LOGIN = 2;
+    private static final int ERROR_LOGIN = 3;
+    private static final int TO_VERIFICATION = 4;
+    private static final int TO_TRACKING = 5;
 
 
     private final int action;
     private Throwable error;
 
-    public LoginScreenState(int action) {
+    public LoginScreenState(@ItemTypeDef int action) {
         this.action = action;
     }
 

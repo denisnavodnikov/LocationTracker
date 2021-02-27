@@ -28,13 +28,13 @@ import io.reactivex.rxjava3.core.Single;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
-import ru.navodnikov.denis.locationtracker.models.repo.network.Network;
+import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 
-public class TrackerNetwork implements Network {
-    @Inject
-    ActivityHolder activityHolder;
+public class TrackerTrackerNetworkImpl implements TrackerNetwork {
+
+    private final ActivityHolder activityHolder;
 
     private final FirebaseAuth mAuth;
     private FirebaseDatabase db;
@@ -43,9 +43,9 @@ public class TrackerNetwork implements Network {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthCredential credential;
 
-
-    public TrackerNetwork() {
-        TrackerApp.getComponent().inject(this);
+    @Inject
+    public TrackerTrackerNetworkImpl(ActivityHolder activityHolder) {
+        this.activityHolder = activityHolder;
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

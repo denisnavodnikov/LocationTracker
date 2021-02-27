@@ -5,10 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -20,12 +18,13 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
-import ru.navodnikov.denis.locationtracker.mvi.HostedFragment;
+import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
-public class RegisterFragment extends HostedFragment<RegisterScreenState, RegisterContract.ViewModel, RegisterContract.Host> implements RegisterContract.View, View.OnClickListener {
+public class RegisterFragment extends BaseFragment<RegisterScreenState, RegisterViewModel> implements RegisterContract.View {
+
 
     private FragmentRegisterBinding fragmentRegisterBinding;
     private NavController navController;
@@ -34,10 +33,15 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
     }
 
     @Override
-    protected RegisterContract.ViewModel createModel() {
-        return new ViewModelProvider(this, new RegisterViewModelFactory()).get(RegisterViewModel.class);
+    public Class<RegisterViewModel> getViewModel() {
+        return RegisterViewModel.class;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model.getStateObservable().observe(this,this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +73,14 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        fragmentRegisterBinding.registerButton.setOnClickListener(this);
+        fragmentRegisterBinding.registerButton.setOnClickListener(v -> {
+            if (fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+                getModel().registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
+            } else {
+                getModel().registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
+                        getTextFromView(fragmentRegisterBinding.passwordForRegister));
+            }
+        });
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
@@ -92,9 +103,7 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
 
     @Override
     public void showLoginFailed(@StringRes Integer errorString) {
-        if (hasHost()) {
-            getFragmentHost().showError(errorString);
-        }
+        showError(errorString);
     }
 
 
@@ -129,13 +138,4 @@ public class RegisterFragment extends HostedFragment<RegisterScreenState, Regist
         fragmentRegisterBinding.loading.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.register_button && fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
-            getModel().registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
-        } else {
-            getModel().registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
-                    getTextFromView(fragmentRegisterBinding.passwordForRegister));
-        }
-    }
 }

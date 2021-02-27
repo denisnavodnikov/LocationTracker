@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.mvi;
+package ru.navodnikov.denis.locationtracker.viewmodel;
 
 import androidx.annotation.CallSuper;
 import androidx.lifecycle.Lifecycle;
@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class MviViewModel <T> extends ViewModel implements FragmentContract.ViewModel<T>{
+public abstract class MviViewModel <T> extends ViewModel implements FragmentContract.ViewModel<T>{
 
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
     private final MutableLiveData<T> stateHolder = new MutableLiveData<>();
@@ -37,7 +37,7 @@ public class MviViewModel <T> extends ViewModel implements FragmentContract.View
         stateHolder.setValue(state);
     }
 
-    protected void postState(T state) {
+    public void postState(T state) {
         stateHolder.postValue(state);
     }
 
