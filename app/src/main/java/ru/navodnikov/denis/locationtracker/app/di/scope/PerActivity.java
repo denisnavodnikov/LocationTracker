@@ -1,11 +1,14 @@
 package ru.navodnikov.denis.locationtracker.app.di.scope;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Scope;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 @Scope
-@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Retention(RUNTIME)
 public @interface PerActivity {
 }

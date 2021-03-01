@@ -71,9 +71,9 @@ public class LoginFragment extends BaseFragment<LoginScreenState, LoginViewModel
         });
         fragmentLoginBinding.loginButton.setOnClickListener(v -> {
             if (fragmentLoginBinding.spinnerLogin.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
-                getModel().loginWithPhone(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin));
+                model.loginWithPhone(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin));
             } else {
-                getModel().loginWithEmail(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin),
+                model.loginWithEmail(getTextFromView(fragmentLoginBinding.emailOrPhoneForLogin),
                         getTextFromView(fragmentLoginBinding.passwordForLogin));
             }
         });

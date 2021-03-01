@@ -41,10 +41,6 @@ public abstract class BaseFragment<STATE extends ScreenState, VIEW_MODEL extends
     }
 
 
-    protected VIEW_MODEL getModel() {
-        return model;
-    }
-
     public abstract Class<VIEW_MODEL> getViewModel();
 
     @Override

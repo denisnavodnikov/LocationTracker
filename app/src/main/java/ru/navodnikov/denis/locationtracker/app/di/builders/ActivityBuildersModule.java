@@ -10,7 +10,9 @@ import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
 public abstract class ActivityBuildersModule {
 
     @PerActivity
-    @ContributesAndroidInjector(modules = {FragmentBuildersModule.class, ViewModelBuilderModule.class, TrackingModule.class})
+    @ContributesAndroidInjector(modules = {FragmentBuildersModule.class,
+            ViewModelBuilderModule.class,
+            TrackingModule.class})
     abstract MainActivity contributeMainActivity();
 
 

@@ -75,9 +75,9 @@ public class RegisterFragment extends BaseFragment<RegisterScreenState, Register
         });
         fragmentRegisterBinding.registerButton.setOnClickListener(v -> {
             if (fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
-                getModel().registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
+                model.registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
             } else {
-                getModel().registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
+                model.registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
                         getTextFromView(fragmentRegisterBinding.passwordForRegister));
             }
         });

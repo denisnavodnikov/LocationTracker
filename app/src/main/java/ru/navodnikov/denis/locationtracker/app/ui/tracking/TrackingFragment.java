@@ -60,9 +60,9 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentTrackingBinding.buttonLogOut.setOnClickListener(v -> getModel().logOut());
-        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(v -> getModel().startTracking());
-        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> getModel().stopTracking());
+        fragmentTrackingBinding.buttonLogOut.setOnClickListener(v -> model.logOut());
+        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(v -> model.startTracking());
+        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> model.stopTracking());
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
@@ -114,7 +114,7 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
                 Log.i("TAG", "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                getModel().setPermissionChecked(true);
+                model.setPermissionChecked(true);
             } else {
                 // Permission denied.
                 showError(R.string.permissions_denied);

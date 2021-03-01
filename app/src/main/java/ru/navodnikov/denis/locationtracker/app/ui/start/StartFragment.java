@@ -37,7 +37,7 @@ public class StartFragment extends BaseFragment<StartScreenState, StartViewModel
     @Override
     public void onStart() {
         super.onStart();
-        getModel().checkUserAuthorisation();
+        model.checkUserAuthorisation();
     }
 
 
@@ -58,8 +58,8 @@ public class StartFragment extends BaseFragment<StartScreenState, StartViewModel
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentStartBinding.startLogin.setOnClickListener(v -> getModel().onItemClicked(R.id.start_login));
-        fragmentStartBinding.startRegister.setOnClickListener(v -> getModel().onItemClicked(R.id.start_register));
+        fragmentStartBinding.startLogin.setOnClickListener(v -> model.onItemClicked(R.id.start_login));
+        fragmentStartBinding.startRegister.setOnClickListener(v -> model.onItemClicked(R.id.start_register));
         navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 

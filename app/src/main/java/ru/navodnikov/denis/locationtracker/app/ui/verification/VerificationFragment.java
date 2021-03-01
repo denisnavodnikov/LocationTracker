@@ -64,7 +64,7 @@ public class VerificationFragment extends BaseFragment<VerificationScreenState, 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count == 6) {
                     Log.d("TAG", "sms code");
-                    getModel().verification(s.toString());
+                    model.verification(s.toString());
                     fragmentVerificationBinding.loadingSms.setVisibility(View.VISIBLE);
                 }
             }

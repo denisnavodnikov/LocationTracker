@@ -28,9 +28,9 @@ public class TrackerLocationImpl implements TrackerLocation {
     private long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
 
     @Inject
-    public TrackerLocationImpl(Context context) {
+    public TrackerLocationImpl(Context context, FusedLocationProviderClient fusedLocationClient) {
         this.context = context;
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        this.fusedLocationClient = fusedLocationClient;
     }
 
     @SuppressLint("MissingPermission")
