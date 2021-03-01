@@ -21,23 +21,20 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.bg.ForegroundService;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
-import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
+import ru.navodnikov.denis.locationtracker.abstractions.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
 
 
-public class TrackingFragment extends BaseFragment<TrackingScreenState, TrackingViewModel> implements TrackingContract.View {
+public class TrackingFragment extends BaseFragment<TrackingScreenState, TrackingViewModel, FragmentTrackingBinding> implements TrackingContract.View {
 
-
-    private FragmentTrackingBinding fragmentTrackingBinding;
-    private NavController navController;
 
     public TrackingFragment() {
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model.getStateObservable().observe(this,this);
+        viewModel.getStateObservable().observe(this,this);
     }
 
     @Nullable
@@ -46,31 +43,23 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        fragmentTrackingBinding = FragmentTrackingBinding.inflate(inflater, container, false);
-        View view = fragmentTrackingBinding.getRoot();
+        fragmentBinding = FragmentTrackingBinding.inflate(inflater, container, false);
+        View view = fragmentBinding.getRoot();
         return view;
 
     }
 
     @Override
-    public Class<TrackingViewModel> getViewModel() {
+    public Class<TrackingViewModel> getViewModelClass() {
         return TrackingViewModel.class;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentTrackingBinding.buttonLogOut.setOnClickListener(v -> model.logOut());
-        fragmentTrackingBinding.buttonStartTracking.setOnClickListener(v -> model.startTracking());
-        fragmentTrackingBinding.buttonStopTracking.setOnClickListener(v -> model.stopTracking());
-        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        fragmentTrackingBinding = null;
+        fragmentBinding.buttonLogOut.setOnClickListener(v -> viewModel.logOut());
+        fragmentBinding.buttonStartTracking.setOnClickListener(v -> viewModel.startTracking());
+        fragmentBinding.buttonStopTracking.setOnClickListener(v -> viewModel.stopTracking());
     }
 
 
@@ -81,7 +70,7 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
 
     @Override
     public void showMassage(int massage) {
-        fragmentTrackingBinding.textViewInfo.setText(massage);
+        fragmentBinding.textViewInfo.setText(massage);
     }
 
     @Override
@@ -114,7 +103,7 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
                 Log.i("TAG", "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                model.setPermissionChecked(true);
+                viewModel.setPermissionChecked(true);
             } else {
                 // Permission denied.
                 showError(R.string.permissions_denied);

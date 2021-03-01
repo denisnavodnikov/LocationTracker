@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import ru.navodnikov.denis.locationtracker.app.ui.start.StartContract;
-import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
+import ru.navodnikov.denis.locationtracker.abstractions.ScreenState;
 
 public class StartScreenState extends ScreenState<StartContract.View> {
     @Retention(RetentionPolicy.SOURCE)

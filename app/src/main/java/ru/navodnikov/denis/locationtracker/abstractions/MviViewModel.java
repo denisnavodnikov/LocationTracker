@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.viewmodel;
+package ru.navodnikov.denis.locationtracker.abstractions;
 
 import androidx.annotation.CallSuper;
 import androidx.lifecycle.Lifecycle;

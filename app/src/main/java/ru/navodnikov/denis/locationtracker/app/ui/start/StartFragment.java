@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -15,15 +14,10 @@ import android.view.ViewGroup;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentStartBinding;
-import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
+import ru.navodnikov.denis.locationtracker.abstractions.BaseFragment;
 
 
-public class StartFragment extends BaseFragment<StartScreenState, StartViewModel> implements StartContract.View {
-
-
-    private FragmentStartBinding fragmentStartBinding;
-    private NavController navController;
-
+public class StartFragment extends BaseFragment<StartScreenState, StartViewModel, FragmentStartBinding> implements StartContract.View {
 
     public StartFragment() {
     }
@@ -31,18 +25,18 @@ public class StartFragment extends BaseFragment<StartScreenState, StartViewModel
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model.getStateObservable().observe(this,this);
+        viewModel.getStateObservable().observe(this,this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        model.checkUserAuthorisation();
+        viewModel.checkUserAuthorisation();
     }
 
 
     @Override
-    public Class<StartViewModel> getViewModel() {
+    public Class<StartViewModel> getViewModelClass() {
         return StartViewModel.class;
     }
 
@@ -50,23 +44,16 @@ public class StartFragment extends BaseFragment<StartScreenState, StartViewModel
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragmentStartBinding = FragmentStartBinding.inflate(inflater, container, false);
-        View view = fragmentStartBinding.getRoot();
+        fragmentBinding = FragmentStartBinding.inflate(inflater, container, false);
+        View view = fragmentBinding.getRoot();
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentStartBinding.startLogin.setOnClickListener(v -> model.onItemClicked(R.id.start_login));
-        fragmentStartBinding.startRegister.setOnClickListener(v -> model.onItemClicked(R.id.start_register));
-        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        fragmentStartBinding = null;
+        fragmentBinding.startLogin.setOnClickListener(v -> viewModel.onItemClicked(R.id.start_login));
+        fragmentBinding.startRegister.setOnClickListener(v -> viewModel.onItemClicked(R.id.start_register));
     }
 
 

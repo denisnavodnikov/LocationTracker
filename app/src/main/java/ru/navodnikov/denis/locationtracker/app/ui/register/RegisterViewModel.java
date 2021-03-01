@@ -8,13 +8,15 @@ import androidx.lifecycle.ViewModel;
 import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class RegisterViewModel extends ViewModel implements FragmentContract.ViewModel<RegisterScreenState> {
     private final TrackerNetwork trackerNetwork;
@@ -78,8 +80,18 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
                 .doOnSubscribe(result -> {
                     postState(RegisterScreenState.createRegisterState());
                 })
-                .subscribe(result -> postState(RegisterScreenState.createMoveToVerificationState()),
-                        throwable -> postState(RegisterScreenState.createErrorRegisterState(throwable))));
+                .subscribeWith(new DisposableCompletableObserver(){
+
+                    @Override
+                    public void onComplete() {
+                        postState(RegisterScreenState.createMoveToVerificationState());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        postState(RegisterScreenState.createErrorRegisterState(throwable));
+                    }
+                }));
 
     }
 

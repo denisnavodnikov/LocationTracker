@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModel;
 import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class LoginViewModel extends ViewModel implements FragmentContract.ViewModel<LoginScreenState>{
 
@@ -62,8 +64,18 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
                 .doOnSubscribe(item -> {
                     postState(LoginScreenState.createLoginState());
                 })
-                .subscribe(result -> postState(LoginScreenState.createMoveToVerificationState()),
-                        throwable -> postState(LoginScreenState.createErrorLoginState(throwable))));
+                .subscribeWith(new DisposableCompletableObserver(){
+
+                    @Override
+                    public void onComplete() {
+                        postState(LoginScreenState.createMoveToVerificationState());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        postState(LoginScreenState.createErrorLoginState(throwable));
+                    }
+                }));
 
     }
 

@@ -3,7 +3,7 @@ package ru.navodnikov.denis.locationtracker.app.ui.login;
 import androidx.annotation.StringRes;
 
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class LoginContract {
     public interface ViewModel extends FragmentContract.ViewModel<LoginScreenState> {

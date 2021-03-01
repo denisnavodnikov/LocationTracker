@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.login.LoginContract;
-import ru.navodnikov.denis.locationtracker.viewmodel.ScreenState;
+import ru.navodnikov.denis.locationtracker.abstractions.ScreenState;
 
 public class LoginScreenState extends ScreenState<LoginContract.View> {
     @Retention(RetentionPolicy.SOURCE)

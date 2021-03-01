@@ -1,7 +1,6 @@
 package ru.navodnikov.denis.locationtracker.app.ui.start;
 
-import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class StartContract {
 

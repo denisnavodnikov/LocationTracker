@@ -20,12 +20,13 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
-import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
@@ -37,7 +38,7 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
     private final ActivityHolder activityHolder;
 
     private final FirebaseAuth mAuth;
-    private FirebaseDatabase db;
+    private FirebaseDatabase firebaseDatabase;
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -47,7 +48,7 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
     public TrackerTrackerNetworkImpl(ActivityHolder activityHolder) {
         this.activityHolder = activityHolder;
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
@@ -77,16 +78,6 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
 
 
     @Override
-    public FirebaseAuth getmAuth() {
-        return mAuth;
-    }
-
-    @Override
-    public FirebaseDatabase getDb() {
-        return db;
-    }
-
-    @Override
     public Single<String> loginWithEmail(String username, String password) {
         return Single.create(emitter -> mAuth.signInWithEmailAndPassword(username, password)
                         .addOnCompleteListener(task -> {
@@ -94,23 +85,20 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("log", "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                emitter.onSuccess(user.getUid());
+                                emitter.onSuccess(Objects.requireNonNull(user).getUid());
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("log", "signInWithEmail:failure", task.getException());
-                                emitter.onError(task.getException());
+                                emitter.onError(Objects.requireNonNull(task.getException()));
                             }
 
-                        })
-//                .addOnFailureListener()
+                        }).addOnFailureListener(emitter::onError)
         );
-        //TODO: addOnFailureListener
 
     }
 
     @Override
-    public Single<String> verifyWithPhoneNumber(String userPhone) {
-        return Single.create(emitter -> {
+    public Completable verifyWithPhoneNumber(String userPhone) {
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(mAuth)
                             .setPhoneNumber(userPhone)       // Phone number to verify
@@ -119,9 +107,8 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
                             .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                             .build();
             PhoneAuthProvider.verifyPhoneNumber(options);
-            emitter.onSuccess(Constants.ID_DEF_VALUE);
-            // TODO: do return result
-        });
+        return Completable.complete();
+
     }
 
     @Override
@@ -140,22 +127,22 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("TAG", "signInWithCredential:success");
                         FirebaseUser user = task.getResult().getUser();
-                        emitter.onSuccess(user.getUid());
+                        emitter.onSuccess(Objects.requireNonNull(user).getUid());
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            emitter.onError(task.getException());
+                            emitter.onError(Objects.requireNonNull(task.getException()));
 
                     }
                 }
-            });
+            }).addOnFailureListener(emitter::onError);
         });
     }
 
 
     @Override
     public void sendLocation(UserLocation location) {
-        db.getReference(Constants.DATABASE_PATH)
+        firebaseDatabase.getReference(Constants.DATABASE_PATH)
                 .child(mAuth.getCurrentUser().getUid())
                 .setValue(location).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -177,15 +164,20 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            emitter.onSuccess(user.getUid());
+                            emitter.onSuccess(Objects.requireNonNull(user).getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            emitter.onError(task.getException());
+                            emitter.onError(Objects.requireNonNull(task.getException()));
                         }
-                        // ...
+
                     }
-                }));
+                }).addOnFailureListener(emitter::onError));
+    }
+
+    @Override
+    public void signOut() {
+        mAuth.signOut();
     }
 
 

@@ -1,4 +1,4 @@
-package ru.navodnikov.denis.locationtracker.viewmodel;
+package ru.navodnikov.denis.locationtracker.abstractions;
 
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;

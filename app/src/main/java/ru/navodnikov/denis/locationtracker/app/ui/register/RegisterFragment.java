@@ -18,36 +18,33 @@ import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
-import ru.navodnikov.denis.locationtracker.viewmodel.BaseFragment;
+import ru.navodnikov.denis.locationtracker.abstractions.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 
 
-public class RegisterFragment extends BaseFragment<RegisterScreenState, RegisterViewModel> implements RegisterContract.View {
+public class RegisterFragment extends BaseFragment<RegisterScreenState, RegisterViewModel, FragmentRegisterBinding> implements RegisterContract.View {
 
-
-    private FragmentRegisterBinding fragmentRegisterBinding;
-    private NavController navController;
 
     public RegisterFragment() {
     }
 
     @Override
-    public Class<RegisterViewModel> getViewModel() {
+    public Class<RegisterViewModel> getViewModelClass() {
         return RegisterViewModel.class;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model.getStateObservable().observe(this,this);
+        viewModel.getStateObservable().observe(this,this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragmentRegisterBinding = FragmentRegisterBinding.inflate(inflater, container, false);
-        View view = fragmentRegisterBinding.getRoot();
+        fragmentBinding = FragmentRegisterBinding.inflate(inflater, container, false);
+        View view = fragmentBinding.getRoot();
 
         return view;
     }
@@ -55,17 +52,17 @@ public class RegisterFragment extends BaseFragment<RegisterScreenState, Register
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentRegisterBinding.spinnerRegister.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        fragmentBinding.spinnerRegister.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == Constants.LOGIN_EMAIL) {
-                    fragmentRegisterBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_email));
-                    fragmentRegisterBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                    fragmentRegisterBinding.passwordForRegister.setVisibility(View.VISIBLE);
+                    fragmentBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_email));
+                    fragmentBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    fragmentBinding.passwordForRegister.setVisibility(View.VISIBLE);
                 } else if (position == Constants.LOGIN_PHONE) {
-                    fragmentRegisterBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
-                    fragmentRegisterBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_CLASS_PHONE);
-                    fragmentRegisterBinding.passwordForRegister.setVisibility(View.INVISIBLE);
+                    fragmentBinding.emailOrPhoneForRegister.setHint(view.getContext().getResources().getString(R.string.prompt_phone));
+                    fragmentBinding.emailOrPhoneForRegister.setInputType(InputType.TYPE_CLASS_PHONE);
+                    fragmentBinding.passwordForRegister.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -73,23 +70,16 @@ public class RegisterFragment extends BaseFragment<RegisterScreenState, Register
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        fragmentRegisterBinding.registerButton.setOnClickListener(v -> {
-            if (fragmentRegisterBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
-                model.registerWithPhone(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister));
+        fragmentBinding.registerButton.setOnClickListener(v -> {
+            if (fragmentBinding.spinnerRegister.getSelectedItemPosition() == Constants.LOGIN_PHONE) {
+                viewModel.registerWithPhone(getTextFromView(fragmentBinding.emailOrPhoneForRegister));
             } else {
-                model.registerWithEmail(getTextFromView(fragmentRegisterBinding.emailOrPhoneForRegister),
-                        getTextFromView(fragmentRegisterBinding.passwordForRegister));
+                viewModel.registerWithEmail(getTextFromView(fragmentBinding.emailOrPhoneForRegister),
+                        getTextFromView(fragmentBinding.passwordForRegister));
             }
         });
-        navController = Navigation.findNavController(getActivity(), R.id.nav_host);
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        fragmentRegisterBinding = null;
-    }
 
     @Override
     public void proceedFromRegisterToVerificationScreen() {
@@ -109,33 +99,33 @@ public class RegisterFragment extends BaseFragment<RegisterScreenState, Register
 
     @Override
     public void showErrorEmptyUserEmailOrPhone() {
-        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.empty_fild_error));
     }
 
 
     @Override
     public void showErrorEmptyUserPassword() {
-        fragmentRegisterBinding.passwordForRegister.setError(getContext().getString(R.string.empty_fild_error));
+        fragmentBinding.passwordForRegister.setError(getContext().getString(R.string.empty_fild_error));
     }
 
     @Override
     public void showErrorShortPassword() {
-        fragmentRegisterBinding.passwordForRegister.setError(getContext().getString(R.string.invalid_password));
+        fragmentBinding.passwordForRegister.setError(getContext().getString(R.string.invalid_password));
     }
 
     @Override
     public void showErrorNotUserEmail() {
-        fragmentRegisterBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.invalid_user_email));
+        fragmentBinding.emailOrPhoneForRegister.setError(getContext().getString(R.string.invalid_user_email));
     }
 
     @Override
     public void showProgress() {
-        fragmentRegisterBinding.loading.setVisibility(View.INVISIBLE);
+        fragmentBinding.loading.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        fragmentRegisterBinding.loading.setVisibility(View.GONE);
+        fragmentBinding.loading.setVisibility(View.GONE);
     }
 
 }

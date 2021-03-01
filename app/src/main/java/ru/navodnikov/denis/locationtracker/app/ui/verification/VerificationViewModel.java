@@ -13,7 +13,7 @@ import ru.navodnikov.denis.locationtracker.app.ui.verification.infra.Verificatio
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class VerificationViewModel extends ViewModel implements FragmentContract.ViewModel<VerificationScreenState> {
 

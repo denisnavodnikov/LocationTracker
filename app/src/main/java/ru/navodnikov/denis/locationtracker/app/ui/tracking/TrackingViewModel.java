@@ -10,7 +10,7 @@ import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
-import ru.navodnikov.denis.locationtracker.viewmodel.FragmentContract;
+import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 
 public class TrackingViewModel extends ViewModel implements FragmentContract.ViewModel<TrackingScreenState> {
@@ -36,7 +36,7 @@ public class TrackingViewModel extends ViewModel implements FragmentContract.Vie
 
 
     public void logOut() {
-        trackerNetwork.getmAuth().signOut();
+        trackerNetwork.signOut();
         postState(TrackingScreenState.createLogoutState());
     }
 
@@ -48,10 +48,6 @@ public class TrackingViewModel extends ViewModel implements FragmentContract.Vie
             postState(TrackingScreenState.createCheckPermissionState());
         }
 
-
-//        appLocation.getLocation();
-//        repo.getDao().saveLocation();
-//        network.sendLocation();
 
     }
 
