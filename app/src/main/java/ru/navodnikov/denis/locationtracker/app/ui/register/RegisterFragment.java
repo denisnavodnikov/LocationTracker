@@ -1,24 +1,21 @@
 package ru.navodnikov.denis.locationtracker.app.ui.register;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
 import ru.navodnikov.denis.locationtracker.R;
-import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
-import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
 import ru.navodnikov.denis.locationtracker.abstractions.BaseFragment;
+import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
+import ru.navodnikov.denis.locationtracker.app.utils.Constants;
+import ru.navodnikov.denis.locationtracker.databinding.FragmentRegisterBinding;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Utils.getTextFromView;
 

@@ -21,4 +21,6 @@ public interface TrackerNetwork {
     Single<String> registerWithEmail(String email, String password);
 
     void signOut();
+
+    boolean userIsNotNull();
 }

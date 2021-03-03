@@ -19,7 +19,8 @@ import ru.navodnikov.denis.locationtracker.app.di.module.ViewModelFactoryModule;
         AndroidSupportInjectionModule.class,
         ActivityBuildersModule.class,
         AppModule.class,
-        ViewModelFactoryModule.class
+        ViewModelFactoryModule.class,
+        ViewModelBuilderModule.class
 })
 public interface AppComponent extends AndroidInjector<TrackerApp> {
 

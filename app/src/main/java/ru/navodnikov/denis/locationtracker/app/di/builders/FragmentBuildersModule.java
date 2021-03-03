@@ -24,6 +24,6 @@ public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector()
     abstract VerificationFragment provideVerificationFragment();
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = {TrackingModule.class})
     abstract TrackingFragment provideTrackingFragment();
 }

@@ -10,6 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 import ru.navodnikov.denis.locationtracker.app.bg.SendTrackerContract;
 import ru.navodnikov.denis.locationtracker.app.bg.TrackerLocationSender;
+import ru.navodnikov.denis.locationtracker.app.di.scope.PerActivity;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
 import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
@@ -56,6 +57,7 @@ public class AppModule {
     public TrackerRepository getTrackerRepo(TrackerDatabase db) {
         return new TrackerRepositoryImpl(db);
     }
+
 
 
 }

@@ -14,20 +14,19 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
 import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class RegisterViewModel extends ViewModel implements FragmentContract.ViewModel<RegisterScreenState> {
-    private final TrackerNetwork trackerNetwork;
-    private final UserStorage userStorage;
+    private final TrackerRepository trackerRepository;
     private final MutableLiveData<RegisterScreenState> stateHolder = new MutableLiveData<>();
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
 
     @Inject
-    public RegisterViewModel(TrackerNetwork trackerNetwork, UserStorage userStorage) {
-        this.trackerNetwork = trackerNetwork;
-        this.userStorage = userStorage;
+    public RegisterViewModel(TrackerRepository trackerRepository) {
+        this.trackerRepository = trackerRepository;
 
     }
 
@@ -54,16 +53,13 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
             return;
         }
 
-        observeTillDestroy(trackerNetwork.registerWithEmail(userEmail, password)
+        observeTillDestroy(trackerRepository.registerWithEmailRepo(userEmail, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(item -> {
                     postState(RegisterScreenState.createRegisterState());
                 })
-                .subscribe(result -> {
-                            userStorage.putUserId(result);
-                            postState(RegisterScreenState.createMoveToTrackingState());
-                        },
+                .subscribe(result -> postState(RegisterScreenState.createMoveToTrackingState()),
                         throwable -> postState(RegisterScreenState.createErrorRegisterState(throwable))
                 ));
 
@@ -74,8 +70,7 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
             postState(RegisterScreenState.createErrorEmptyUserEmailOrPhoneState());
             return;
         }
-        observeTillDestroy(trackerNetwork.verifyWithPhoneNumber(userPhone)
-                .subscribeOn(Schedulers.io())
+        observeTillDestroy(trackerRepository.verifyWithPhoneNumberRepo(userPhone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(result -> {
                     postState(RegisterScreenState.createRegisterState());

@@ -80,41 +80,41 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
     @Override
     public Single<String> loginWithEmail(String username, String password) {
         return Single.create(emitter -> mAuth.signInWithEmailAndPassword(username, password)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("log", "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                emitter.onSuccess(Objects.requireNonNull(user).getUid());
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w("log", "signInWithEmail:failure", task.getException());
-                                emitter.onError(Objects.requireNonNull(task.getException()));
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("log", "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        emitter.onSuccess(Objects.requireNonNull(user).getUid());
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("log", "signInWithEmail:failure", task.getException());
+                        emitter.onError(Objects.requireNonNull(task.getException()));
+                    }
 
-                        }).addOnFailureListener(emitter::onError)
+                }).addOnFailureListener(emitter::onError)
         );
 
     }
 
     @Override
     public Completable verifyWithPhoneNumber(String userPhone) {
-            PhoneAuthOptions options =
-                    PhoneAuthOptions.newBuilder(mAuth)
-                            .setPhoneNumber(userPhone)       // Phone number to verify
-                            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                            .setActivity(activityHolder.getActivity())                 // Activity (for callback binding)
-                            .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                            .build();
-            PhoneAuthProvider.verifyPhoneNumber(options);
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(userPhone)       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(activityHolder.getActivity())                 // Activity (for callback binding)
+                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
         return Completable.complete();
 
     }
 
     @Override
     public Single<String> verificationWithSMS(String smsCode) {
-            credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
-            return signInWithPhoneAuthCredential(credential);
+        credential = PhoneAuthProvider.getCredential(mVerificationId, smsCode);
+        return signInWithPhoneAuthCredential(credential);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            emitter.onError(Objects.requireNonNull(task.getException()));
+                        emitter.onError(Objects.requireNonNull(task.getException()));
 
                     }
                 }
@@ -178,6 +178,13 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
     @Override
     public void signOut() {
         mAuth.signOut();
+    }
+
+    @Override
+    public boolean userIsNotNull() {
+        if (mAuth.getCurrentUser() == null) {
+            return false;
+        } else return true;
     }
 
 

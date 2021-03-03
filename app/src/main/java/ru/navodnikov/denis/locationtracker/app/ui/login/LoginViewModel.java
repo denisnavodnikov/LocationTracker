@@ -12,20 +12,19 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
-import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
+import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
+import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 
 public class LoginViewModel extends ViewModel implements FragmentContract.ViewModel<LoginScreenState>{
 
-    private final TrackerNetwork trackerNetwork;
+    private final TrackerRepository trackerRepository;
     private final MutableLiveData<LoginScreenState> stateHolder = new MutableLiveData<>();
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
 
     @Inject
-    public LoginViewModel(TrackerNetwork trackerNetwork) {
-        this.trackerNetwork = trackerNetwork;
+    public LoginViewModel(TrackerRepository trackerRepository) {
+        this.trackerRepository = trackerRepository;
     }
 
     public void loginWithEmail(String userEmail, String password) {
@@ -41,8 +40,7 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
             return;
         }
         observeTillDestroy(
-                trackerNetwork.loginWithEmail(userEmail, password)
-                        .subscribeOn(Schedulers.io())
+                trackerRepository.loginWithEmailRepo(userEmail, password)
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(item -> {
                             postState(LoginScreenState.createLoginState());
@@ -58,8 +56,7 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
             return;
         }
 
-        observeTillDestroy(trackerNetwork.verifyWithPhoneNumber(userPhone)
-                .subscribeOn(Schedulers.io())
+        observeTillDestroy(trackerRepository.verifyWithPhoneNumberRepo(userPhone)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(item -> {
                     postState(LoginScreenState.createLoginState());
@@ -78,7 +75,6 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
                 }));
 
     }
-
 
     @Override
     public MutableLiveData<LoginScreenState> getStateObservable() {

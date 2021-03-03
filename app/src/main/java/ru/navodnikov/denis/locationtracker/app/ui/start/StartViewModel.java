@@ -33,7 +33,7 @@ public class StartViewModel extends ViewModel implements FragmentContract.ViewMo
     }
 
     public void checkUserAuthorisation() {
-        if (trackerNetwork.getmAuth().getCurrentUser() != null) {
+        if (trackerNetwork.userIsNotNull()) {
             postState(StartScreenState.createMoveToTrackingState());
         }
     }

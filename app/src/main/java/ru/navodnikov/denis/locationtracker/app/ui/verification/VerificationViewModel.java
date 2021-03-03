@@ -17,37 +17,26 @@ import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class VerificationViewModel extends ViewModel implements FragmentContract.ViewModel<VerificationScreenState> {
 
-    private final TrackerRepository repo;
-    private final TrackerNetwork trackerNetwork;
-    private final UserStorage userStorage;
+    private final TrackerRepository trackerRepository;
     private final MutableLiveData<VerificationScreenState> stateHolder = new MutableLiveData<>();
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
 
     @Inject
-    public VerificationViewModel(TrackerRepository repo, TrackerNetwork trackerNetwork, UserStorage userStorage) {
-        this.repo = repo;
-        this.trackerNetwork = trackerNetwork;
-        this.userStorage = userStorage;
+    public VerificationViewModel(TrackerRepository trackerRepository) {
+        this.trackerRepository = trackerRepository;
     }
-
-
 
     public void verification(String smsCode) {
 
-        observeTillDestroy(trackerNetwork.verificationWithSMS(smsCode)
-                .subscribeOn(Schedulers.io())
+        observeTillDestroy(trackerRepository.verificationWithSMSRepo(smsCode)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(item -> {
                     postState(VerificationScreenState.createVerificationState());
                 })
-                .subscribe(result -> {
-                            userStorage.putUserId(result);
-                            postState(VerificationScreenState.createMoveToTrackingState());
-                        },
+                .subscribe(result -> postState(VerificationScreenState.createMoveToTrackingState()),
                         throwable -> postState(VerificationScreenState.createErrorVerificationState())
                 ));
     }
-
 
     @Override
     public MutableLiveData<VerificationScreenState> getStateObservable() {
@@ -58,6 +47,7 @@ public class VerificationViewModel extends ViewModel implements FragmentContract
     public void postState(VerificationScreenState state) {
         stateHolder.postValue(state);
     }
+
     protected void observeTillDestroy(Disposable... subscriptions) {
         onDestroyDisposables.addAll(subscriptions);
     }
