@@ -94,12 +94,12 @@ public class LoginFragment extends BaseFragment<LoginScreenState, LoginViewModel
 
     @Override
     public void proceedFromLoginToVerificationScreen() {
-        navController.navigate(R.id.action_loginFragment_to_verificationFragment);
+        navController.navigate(LoginFragmentDirections.actionLoginFragmentToVerificationFragment());
     }
 
     @Override
     public void proceedFromLoginToTrackingScreen() {
-        navController.navigate(R.id.action_loginFragment_to_trackingFragment);
+        navController.navigate(LoginFragmentDirections.actionLoginFragmentToTrackingFragment());
     }
 
 

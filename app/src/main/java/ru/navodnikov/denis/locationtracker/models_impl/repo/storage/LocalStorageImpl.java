@@ -1,11 +1,11 @@
-package ru.navodnikov.denis.locationtracker.models_impl.storage;
+package ru.navodnikov.denis.locationtracker.models_impl.repo.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.models.repo.storage.UserStorage;
 
 public class LocalStorageImpl implements UserStorage {
 

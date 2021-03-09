@@ -6,8 +6,8 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
-import dagger.android.support.AndroidSupportInjectionModule;
 import ru.navodnikov.denis.locationtracker.app.TrackerApp;
 import ru.navodnikov.denis.locationtracker.app.di.builders.ActivityBuildersModule;
 import ru.navodnikov.denis.locationtracker.app.di.builders.ViewModelBuilderModule;
@@ -16,7 +16,7 @@ import ru.navodnikov.denis.locationtracker.app.di.module.ViewModelFactoryModule;
 
 @Singleton
 @Component(modules = {
-        AndroidSupportInjectionModule.class,
+        AndroidInjectionModule.class,
         ActivityBuildersModule.class,
         AppModule.class,
         ViewModelFactoryModule.class,

@@ -3,6 +3,7 @@ package ru.navodnikov.denis.locationtracker.app.di.builders;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import ru.navodnikov.denis.locationtracker.app.di.module.tracking.TrackingModule;
+import ru.navodnikov.denis.locationtracker.app.di.scope.PerFragment;
 import ru.navodnikov.denis.locationtracker.app.ui.login.LoginFragment;
 import ru.navodnikov.denis.locationtracker.app.ui.register.RegisterFragment;
 import ru.navodnikov.denis.locationtracker.app.ui.start.StartFragment;
@@ -24,6 +25,8 @@ public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector()
     abstract VerificationFragment provideVerificationFragment();
 
-    @ContributesAndroidInjector(modules = {TrackingModule.class})
+    @PerFragment
+    @ContributesAndroidInjector(modules = {TrackingModule.class, ServiceBuilderModule.class})
     abstract TrackingFragment provideTrackingFragment();
+
 }

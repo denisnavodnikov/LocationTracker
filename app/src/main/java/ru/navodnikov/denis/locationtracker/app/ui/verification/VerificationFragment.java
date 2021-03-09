@@ -87,6 +87,6 @@ public class VerificationFragment extends BaseFragment<VerificationScreenState, 
 
     @Override
     public void proceedFromVerificationToTrackingScreen() {
-        navController.navigate(R.id.action_verificationFragment_to_trackingFragment);
+        navController.navigate(VerificationFragmentDirections.actionVerificationFragmentToTrackingFragment());
     }
 }

@@ -14,5 +14,6 @@ public class Constants {
     public static final int BUTTON_REGISTER = 1;
     public static final String TABLE_NAME = "locations";
     public static final String DB_NAME = "tracker.db";
+    public static final String WORK = "SendLocations";
 
 }

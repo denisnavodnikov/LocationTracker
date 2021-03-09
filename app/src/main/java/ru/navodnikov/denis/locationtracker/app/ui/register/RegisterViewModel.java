@@ -15,11 +15,9 @@ import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.app.ui.register.infra.RegisterScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
-import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
 import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
-public class RegisterViewModel extends ViewModel implements FragmentContract.ViewModel<RegisterScreenState> {
+public class RegisterViewModel extends ViewModel implements RegisterContract.ViewModel {
     private final TrackerRepository trackerRepository;
     private final MutableLiveData<RegisterScreenState> stateHolder = new MutableLiveData<>();
     private final CompositeDisposable onDestroyDisposables = new CompositeDisposable();
@@ -30,7 +28,7 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
 
     }
 
-
+    @Override
     public void registerWithEmail(String userEmail, String password) {
 
         if (TextUtils.isEmpty(userEmail)) {
@@ -65,6 +63,7 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
 
     }
 
+    @Override
     public void registerWithPhone(String userPhone) {
         if (TextUtils.isEmpty(userPhone)) {
             postState(RegisterScreenState.createErrorEmptyUserEmailOrPhoneState());
@@ -101,7 +100,8 @@ public class RegisterViewModel extends ViewModel implements FragmentContract.Vie
         stateHolder.postValue(state);
     }
 
-    protected void observeTillDestroy(Disposable... subscriptions) {
+    @Override
+    public void observeTillDestroy(Disposable... subscriptions) {
         onDestroyDisposables.addAll(subscriptions);
     }
 }

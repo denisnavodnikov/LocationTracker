@@ -15,13 +15,16 @@ import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLoca
 public interface TrackerRoomDao {
 
 
-    @Query("SELECT * FROM "+ Constants.TABLE_NAME +"  ORDER BY time ")
-    List<UserLocation> getAllLocations();
+    @Query(" SELECT * FROM "+ Constants.TABLE_NAME +" ORDER BY id LIMIT 100 ")
+    List<UserLocation> getScopeLocations();
+
+    @Query(" DELETE FROM " + Constants.TABLE_NAME +" WHERE id IN ( SELECT id FROM "+ Constants.TABLE_NAME +" ORDER BY id LIMIT 100 ) ")
+    void deleteScope();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLocation(UserLocation userLocation);
 
-    @Query("DELETE FROM " + Constants.TABLE_NAME)
-    void deleteAll();
+    @Query(" SELECT COUNT(*) FROM " + Constants.TABLE_NAME)
+    int countRows();
 
 }

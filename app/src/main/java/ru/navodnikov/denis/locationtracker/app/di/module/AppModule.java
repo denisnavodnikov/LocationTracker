@@ -8,21 +8,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.navodnikov.denis.locationtracker.app.bg.SendTrackerContract;
-import ru.navodnikov.denis.locationtracker.app.bg.TrackerLocationSender;
-import ru.navodnikov.denis.locationtracker.app.di.scope.PerActivity;
 import ru.navodnikov.denis.locationtracker.app.utils.Constants;
 import ru.navodnikov.denis.locationtracker.models.ActivityHolder;
-import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.models.repo.storage.UserStorage;
 import ru.navodnikov.denis.locationtracker.models_impl.ActivityHolderImp;
-import ru.navodnikov.denis.locationtracker.models_impl.location.TrackerLocationImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.TrackerRepositoryImpl;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDatabase;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.network.TrackerTrackerNetworkImpl;
-import ru.navodnikov.denis.locationtracker.models_impl.storage.LocalStorageImpl;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.network.TrackerNetworkImpl;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.storage.LocalStorageImpl;
 
 @Module
 public class AppModule {
@@ -43,7 +38,7 @@ public class AppModule {
     @Provides
     @Singleton
     static TrackerNetwork getTrackerNetwork(ActivityHolder activityHolder) {
-        return new TrackerTrackerNetworkImpl(activityHolder);
+        return new TrackerNetworkImpl(activityHolder);
     }
 
     @Provides
@@ -54,8 +49,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public TrackerRepository getTrackerRepo(TrackerDatabase db) {
-        return new TrackerRepositoryImpl(db);
+    public TrackerRepository getTrackerRepo(TrackerDatabase db, TrackerNetwork trackerNetwork, UserStorage userStorage) {
+        return new TrackerRepositoryImpl(db, trackerNetwork, userStorage);
     }
 
 

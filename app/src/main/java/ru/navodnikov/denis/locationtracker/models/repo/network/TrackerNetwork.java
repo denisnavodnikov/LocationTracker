@@ -16,7 +16,7 @@ public interface TrackerNetwork {
 
     Single<String> signInWithPhoneAuthCredential(PhoneAuthCredential credential);
 
-    void sendLocation(UserLocation location);
+    Completable sendLocation(UserLocation location);
 
     Single<String> registerWithEmail(String email, String password);
 

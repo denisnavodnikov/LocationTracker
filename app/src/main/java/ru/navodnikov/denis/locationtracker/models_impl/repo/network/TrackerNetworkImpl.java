@@ -33,7 +33,7 @@ import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 
-public class TrackerTrackerNetworkImpl implements TrackerNetwork {
+public class TrackerNetworkImpl implements TrackerNetwork {
 
     private final ActivityHolder activityHolder;
 
@@ -45,7 +45,7 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
     private PhoneAuthCredential credential;
 
     @Inject
-    public TrackerTrackerNetworkImpl(ActivityHolder activityHolder) {
+    public TrackerNetworkImpl(ActivityHolder activityHolder) {
         this.activityHolder = activityHolder;
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -99,15 +99,21 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
 
     @Override
     public Completable verifyWithPhoneNumber(String userPhone) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(userPhone)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(activityHolder.getActivity())                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        return Completable.complete();
+        return Completable.create(emitter -> {
+            try {
+                PhoneAuthOptions options =
+                        PhoneAuthOptions.newBuilder(mAuth)
+                                .setPhoneNumber(userPhone)       // Phone number to verify
+                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                                .setActivity(activityHolder.getActivity())                 // Activity (for callback binding)
+                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                                .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+                emitter.onComplete();
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+        });
 
     }
 
@@ -141,17 +147,21 @@ public class TrackerTrackerNetworkImpl implements TrackerNetwork {
 
 
     @Override
-    public void sendLocation(UserLocation location) {
-        firebaseDatabase.getReference(Constants.DATABASE_PATH)
-                .child(mAuth.getCurrentUser().getUid())
-                .setValue(location).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("TAG", "upload location: Success");
-            }
-        });
-
-
+    public Completable sendLocation(UserLocation location) {
+        return Completable.create(emitter -> {
+                    firebaseDatabase.getReference(Constants.DATABASE_PATH)
+                            .child(mAuth.getCurrentUser().getUid())
+                            .setValue(location).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("TAG", "upload location: Success");
+                            emitter.onComplete();
+                        }
+                    }).addOnFailureListener(e -> {
+                        emitter.onError(e);
+                    });
+                }
+        );
     }
 
     @Override

@@ -16,7 +16,7 @@ import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 import ru.navodnikov.denis.locationtracker.app.ui.login.infra.LoginScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 
-public class LoginViewModel extends ViewModel implements FragmentContract.ViewModel<LoginScreenState>{
+public class LoginViewModel extends ViewModel implements LoginContract.ViewModel {
 
     private final TrackerRepository trackerRepository;
     private final MutableLiveData<LoginScreenState> stateHolder = new MutableLiveData<>();
@@ -27,6 +27,7 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
         this.trackerRepository = trackerRepository;
     }
 
+    @Override
     public void loginWithEmail(String userEmail, String password) {
 
         if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
@@ -50,6 +51,7 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
                         ));
     }
 
+    @Override
     public void loginWithPhone(String userPhone) {
         if (TextUtils.isEmpty(userPhone)) {
             postState(LoginScreenState.createErrorInputUsernameState());
@@ -61,7 +63,7 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
                 .doOnSubscribe(item -> {
                     postState(LoginScreenState.createLoginState());
                 })
-                .subscribeWith(new DisposableCompletableObserver(){
+                .subscribeWith(new DisposableCompletableObserver() {
 
                     @Override
                     public void onComplete() {
@@ -85,7 +87,9 @@ public class LoginViewModel extends ViewModel implements FragmentContract.ViewMo
     public void postState(LoginScreenState state) {
         stateHolder.postValue(state);
     }
-    protected void observeTillDestroy(Disposable... subscriptions) {
+
+    @Override
+    public void observeTillDestroy(Disposable... subscriptions) {
         onDestroyDisposables.addAll(subscriptions);
     }
 }

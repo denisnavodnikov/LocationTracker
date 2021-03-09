@@ -1,17 +1,19 @@
 package ru.navodnikov.denis.locationtracker.models_impl.repo;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
-import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
-import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDatabase;
 import ru.navodnikov.denis.locationtracker.models.repo.dao.TrackerRoomDao;
+import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
+import ru.navodnikov.denis.locationtracker.models.repo.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.TrackerDatabase;
 import ru.navodnikov.denis.locationtracker.models_impl.repo.dao.schemas.UserLocation;
 
 public class TrackerRepositoryImpl implements TrackerRepository {
@@ -57,21 +59,44 @@ public class TrackerRepositoryImpl implements TrackerRepository {
         trackerNetwork.signOut();
     }
 
-
     @Override
-    public void insert(UserLocation location) {
-        dao.insertLocation(location);
+    public Completable saveLocation(UserLocation location) {
+        return trackerNetwork.sendLocation(location)
+                .onErrorComplete()
+                .andThen(insert(location));
     }
 
     @Override
-    public void deleteAll() {
-        dao.deleteAll();
+    public Completable sendLocationsToServerRepo() {
+        return Completable.create(emitter -> {
+            AtomicInteger rows = new AtomicInteger(dao.countRows());
+                    try {
+                        while (rows.get() != 0){
+                            Observable.fromIterable(dao.getScopeLocations())
+                                    .observeOn(Schedulers.io())
+                                    .map(location -> trackerNetwork.sendLocation(location))
+                                    .doOnComplete(() ->  dao.deleteScope())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe();
+                            rows.set(dao.countRows());
+                        }
+                        emitter.onComplete();
+                    } catch (Exception e) {
+                        emitter.onError(e);
+                    }
+                }
+        );
+
+
+
     }
 
+
     @Override
-    public List<UserLocation> getAllLocations() {
-        return dao.getAllLocations();
+    public Completable insert(UserLocation location) {
+        return Completable.fromAction(() ->dao.insertLocation(location));
     }
+
 
 
 }

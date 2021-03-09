@@ -11,7 +11,7 @@ import ru.navodnikov.denis.locationtracker.app.ui.start.infra.StartScreenState;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
 import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
-public class StartViewModel extends ViewModel implements FragmentContract.ViewModel<StartScreenState> {
+public class StartViewModel extends ViewModel implements StartContract.ViewModel {
 
     private final TrackerNetwork trackerNetwork;
     private final MutableLiveData<StartScreenState> stateHolder = new MutableLiveData<>();
@@ -23,6 +23,7 @@ public class StartViewModel extends ViewModel implements FragmentContract.ViewMo
     }
 
 
+    @Override
     public void onItemClicked(int button) {
         if (button == R.id.start_login) {
             postState(StartScreenState.createMoveToLoginState());
@@ -32,6 +33,7 @@ public class StartViewModel extends ViewModel implements FragmentContract.ViewMo
         }
     }
 
+    @Override
     public void checkUserAuthorisation() {
         if (trackerNetwork.userIsNotNull()) {
             postState(StartScreenState.createMoveToTrackingState());

@@ -6,6 +6,8 @@ public class SendTrackerContract {
         void sendLocationStart();
 
         void sendLocationStop();
+
+        void sendLocationsToServer();
     }
 
 }

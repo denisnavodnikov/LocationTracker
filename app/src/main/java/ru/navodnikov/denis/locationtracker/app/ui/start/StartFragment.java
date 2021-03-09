@@ -59,16 +59,16 @@ public class StartFragment extends BaseFragment<StartScreenState, StartViewModel
 
     @Override
     public void proceedToRegisterScreen() {
-        navController.navigate(R.id.action_startFragment_to_registerFragment);
+        navController.navigate(StartFragmentDirections.actionStartFragmentToRegisterFragment());
     }
 
     @Override
     public void proceedToTrackingScreen() {
-        navController.navigate(R.id.action_startFragment_to_trackingFragment);
+        navController.navigate(StartFragmentDirections.actionStartFragmentToTrackingFragment());
     }
 
     @Override
     public void proceedToLoginScreen() {
-        navController.navigate(R.id.action_startFragment_to_loginFragment);
+        navController.navigate(StartFragmentDirections.actionStartFragmentToLoginFragment());
     }
 }

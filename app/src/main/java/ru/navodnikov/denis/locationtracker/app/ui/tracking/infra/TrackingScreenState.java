@@ -54,7 +54,7 @@ public class TrackingScreenState extends ScreenState<TrackingContract.View> {
             trackingScreen.showMassage(R.string.text_tracking_start);
         }
         else if(CHECK_PERMISSION==action){
-            trackingScreen.permissionRequest();
+            trackingScreen.locationPermissionRequest();
         }
     }
 }

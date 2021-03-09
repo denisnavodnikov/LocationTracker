@@ -13,27 +13,24 @@ import ru.navodnikov.denis.locationtracker.app.di.scope.PerFragment;
 import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
 import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
+import ru.navodnikov.denis.locationtracker.models.repo.storage.UserStorage;
 import ru.navodnikov.denis.locationtracker.models_impl.location.TrackerLocationImpl;
 
 @Module
 public class TrackingModule {
     @Provides
-    @PerFragment
     static TrackerLocation getTrackerLocation(Application application, FusedLocationProviderClient fusedLocationClient) {
         return new TrackerLocationImpl(application, fusedLocationClient);
     }
 
     @Provides
-    @PerFragment
     static FusedLocationProviderClient getFusedLocationProviderClient(Application application){
         return LocationServices.getFusedLocationProviderClient(application);
     }
 
     @Provides
-    @PerFragment
     static SendTrackerContract.LocationSender getTrackerLocationSender(TrackerRepository repo, TrackerNetwork trackerNetwork, TrackerLocation trackerLocation, UserStorage userStorage) {
-        return new TrackerLocationSender(repo,  trackerNetwork, trackerLocation, userStorage);
+        return new TrackerLocationSender(repo, trackerLocation);
     }
 
 }

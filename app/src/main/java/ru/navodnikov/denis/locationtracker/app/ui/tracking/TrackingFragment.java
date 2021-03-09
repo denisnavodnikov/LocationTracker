@@ -13,17 +13,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.bg.ForegroundService;
+import ru.navodnikov.denis.locationtracker.app.bg.SendWorker;
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
 import ru.navodnikov.denis.locationtracker.databinding.FragmentTrackingBinding;
 import ru.navodnikov.denis.locationtracker.abstractions.BaseFragment;
 
 import static ru.navodnikov.denis.locationtracker.app.utils.Constants.REQUEST_LOCATION;
+import static ru.navodnikov.denis.locationtracker.app.utils.Constants.WORK;
 
 
 public class TrackingFragment extends BaseFragment<TrackingScreenState, TrackingViewModel, FragmentTrackingBinding> implements TrackingContract.View {
@@ -60,6 +66,15 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
         fragmentBinding.buttonLogOut.setOnClickListener(v -> viewModel.logOut());
         fragmentBinding.buttonStartTracking.setOnClickListener(v -> viewModel.startTracking());
         fragmentBinding.buttonStopTracking.setOnClickListener(v -> viewModel.stopTracking());
+        locationPermissionRequest();
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(SendWorker.class)
+                .setConstraints(constraints)
+                .build();
+        WorkManager workManager = WorkManager.getInstance(getActivity());
+        workManager.beginUniqueWork(WORK, ExistingWorkPolicy.REPLACE, request).enqueue();
     }
 
 
@@ -75,12 +90,12 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
 
     @Override
     public void proceedToStartScreen() {
-        navController.navigate(R.id.action_trackingFragment_to_startFragment);
+        navController.navigate(TrackingFragmentDirections.actionTrackingFragmentToStartFragment());
     }
 
 
     @Override
-    public void permissionRequest() {
+    public void locationPermissionRequest() {
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(),
@@ -103,7 +118,6 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
                 Log.i("TAG", "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                viewModel.setPermissionChecked(true);
             } else {
                 // Permission denied.
                 showError(R.string.permissions_denied);
@@ -127,4 +141,5 @@ public class TrackingFragment extends BaseFragment<TrackingScreenState, Tracking
         Intent serviceIntent = new Intent(getActivity(), ForegroundService.class);
         requireContext().stopService(serviceIntent);
     }
+
 }

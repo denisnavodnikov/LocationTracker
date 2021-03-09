@@ -6,17 +6,13 @@ import androidx.lifecycle.ViewModel;
 import javax.inject.Inject;
 
 import ru.navodnikov.denis.locationtracker.app.ui.tracking.infra.TrackingScreenState;
-import ru.navodnikov.denis.locationtracker.models.location.TrackerLocation;
 import ru.navodnikov.denis.locationtracker.models.repo.TrackerRepository;
-import ru.navodnikov.denis.locationtracker.models.repo.network.TrackerNetwork;
-import ru.navodnikov.denis.locationtracker.models.storage.UserStorage;
 import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 
-public class TrackingViewModel extends ViewModel implements FragmentContract.ViewModel<TrackingScreenState> {
+public class TrackingViewModel extends ViewModel implements TrackingContract.ViewModel {
 
     private final TrackerRepository trackerRepository;
-    private boolean isPermissionChecked;
     private final MutableLiveData<TrackingScreenState> stateHolder = new MutableLiveData<>();
 
     @Inject
@@ -24,28 +20,20 @@ public class TrackingViewModel extends ViewModel implements FragmentContract.Vie
         this.trackerRepository = trackerRepository;
     }
 
-
-    public void setPermissionChecked(boolean permissionChecked) {
-        isPermissionChecked = permissionChecked;
-    }
-
-
+    @Override
     public void logOut() {
         trackerRepository.signOutRepo();
         postState(TrackingScreenState.createLogoutState());
     }
 
-
+    @Override
     public void startTracking() {
-        if(isPermissionChecked){
-            postState(TrackingScreenState.createStartTrackingState());
-        }else{
-            postState(TrackingScreenState.createCheckPermissionState());
-        }
-
+        postState(TrackingScreenState.createCheckPermissionState());
+        postState(TrackingScreenState.createStartTrackingState());
 
     }
 
+    @Override
     public void stopTracking() {
         postState(TrackingScreenState.createStopTrackingState());
     }

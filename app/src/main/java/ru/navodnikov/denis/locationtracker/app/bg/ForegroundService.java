@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
 import dagger.android.DaggerService;
 import ru.navodnikov.denis.locationtracker.R;
 import ru.navodnikov.denis.locationtracker.app.ui.MainActivity;
@@ -25,7 +26,7 @@ public class ForegroundService extends DaggerService {
 
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String TITLE = "Location Tracker";
-    public static final String MASSAGE = "Отправка местоположения";
+    public static final String MESSAGE = "Отправка местоположения";
 
 
     @Override
@@ -36,7 +37,7 @@ public class ForegroundService extends DaggerService {
                 PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(TITLE)
-                .setContentText(MASSAGE)
+                .setContentText(MESSAGE)
                 .setSmallIcon(R.drawable.ic_icon_app)
                 .setContentIntent(pendingIntent)
                 .build();

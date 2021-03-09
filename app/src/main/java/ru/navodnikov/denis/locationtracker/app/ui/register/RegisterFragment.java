@@ -80,12 +80,12 @@ public class RegisterFragment extends BaseFragment<RegisterScreenState, Register
 
     @Override
     public void proceedFromRegisterToVerificationScreen() {
-        navController.navigate(R.id.action_registerFragment_to_verificationFragment);
+        navController.navigate(RegisterFragmentDirections.actionRegisterFragmentToVerificationFragment());
     }
 
     @Override
     public void proceedFromRegisterToTrackingScreen() {
-        navController.navigate(R.id.action_registerFragment_to_trackingFragment);
+        navController.navigate(RegisterFragmentDirections.actionRegisterFragmentToTrackingFragment());
     }
 
     @Override

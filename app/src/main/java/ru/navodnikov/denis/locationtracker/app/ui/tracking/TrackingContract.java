@@ -5,8 +5,6 @@ import ru.navodnikov.denis.locationtracker.abstractions.FragmentContract;
 
 public class TrackingContract {
     public interface ViewModel extends FragmentContract.ViewModel<TrackingScreenState> {
-        void setPermissionChecked(boolean permissionChecked);
-
         void logOut();
 
         void startTracking();
@@ -19,7 +17,7 @@ public class TrackingContract {
         void showMassage(int massage);
         void proceedToStartScreen();
 
-        void permissionRequest();
+        void locationPermissionRequest();
 
         void startService();
 
